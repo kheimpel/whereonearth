@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "axiom@axiom-marketplace": true,
+    "apple-platform-build-tools@apple-platform-build-tools": true
+  }
+}

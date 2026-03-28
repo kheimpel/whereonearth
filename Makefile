@@ -17,7 +17,7 @@ clean-tiles:
 test:
 	cd WhereOnEarth && xcodebuild test \
 		-scheme WhereOnEarth \
-		-destination 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)' \
+		-destination 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm)' \
 		-resultBundlePath ../TestResults.xcresult \
 		2>&1 | tail -20
 

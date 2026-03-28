@@ -186,6 +186,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DD000001000000000000002A /* PBXTargetDependency */,
 			);
 			name = WhereOnEarthTests;
 			productName = WhereOnEarthTests;
@@ -193,6 +194,24 @@
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		DD000001000000000000001A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA000001000000000000100A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA00000100000000000000FA;
+			remoteInfo = WhereOnEarth;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		DD000001000000000000002A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA00000100000000000000FA /* WhereOnEarth */;
+			targetProxy = DD000001000000000000001A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		AA000001000000000000100A /* Project object */ = {
@@ -401,6 +420,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Where on Earth";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
 				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKWatchOnly = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.whereonearth.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -424,6 +444,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Where on Earth";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
 				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKWatchOnly = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.whereonearth.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";

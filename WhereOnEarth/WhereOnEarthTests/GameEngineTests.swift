@@ -32,7 +32,7 @@ import Testing
         answerRegion: "East Asia", answerContinent: "Asia",
         difficulty: 1
     )
-    let result = GameEngine.score(guessLongitude: 70.0, for: clue)
+    let result = GameEngine.score(guessLongitude: 80.0, for: clue)
     #expect(result.points == 1)
     #expect(result.accuracy == .continent)
 }
