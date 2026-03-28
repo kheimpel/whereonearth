@@ -26,6 +26,8 @@
 		FF00000100000000000000001A /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000001B /* GeoData.swift */; };
 		FF00000100000000000000002A /* ne_110m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000002B /* ne_110m_land.geojson */; };
 		FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000003B /* ne_110m_coastline.geojson */; };
+		GG00000100000000000000001A /* ne_50m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000001B /* ne_50m_land.geojson */; };
+		GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000002B /* ne_50m_coastline.geojson */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		FF00000100000000000000001B /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
 		FF00000100000000000000002B /* ne_110m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_land.geojson; sourceTree = "<group>"; };
 		FF00000100000000000000003B /* ne_110m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_coastline.geojson; sourceTree = "<group>"; };
+		GG00000100000000000000001B /* ne_50m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_land.geojson; sourceTree = "<group>"; };
+		GG00000100000000000000002B /* ne_50m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_coastline.geojson; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,8 @@
 				BB00000100000000000000006B /* clues.json */,
 				FF00000100000000000000002B /* ne_110m_land.geojson */,
 				FF00000100000000000000003B /* ne_110m_coastline.geojson */,
+				GG00000100000000000000001B /* ne_50m_land.geojson */,
+				GG00000100000000000000002B /* ne_50m_coastline.geojson */,
 			);
 			name = Resources;
 			path = Resources;
@@ -267,6 +273,8 @@
 				BB00000100000000000000006A /* clues.json in Resources */,
 				FF00000100000000000000002A /* ne_110m_land.geojson in Resources */,
 				FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */,
+				GG00000100000000000000001A /* ne_50m_land.geojson in Resources */,
+				GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

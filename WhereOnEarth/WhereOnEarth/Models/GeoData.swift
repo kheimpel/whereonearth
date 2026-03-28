@@ -13,8 +13,8 @@ final class GeoData: Sendable {
     let coastlines: [GeoLine]
 
     init() {
-        landPolygons = Self.loadPolygons(resource: "ne_110m_land")
-        coastlines = Self.loadLines(resource: "ne_110m_coastline")
+        landPolygons = Self.loadPolygons(resource: "ne_50m_land")
+        coastlines = Self.loadLines(resource: "ne_50m_coastline")
     }
 
     private static func loadPolygons(resource: String) -> [GeoPolygon] {

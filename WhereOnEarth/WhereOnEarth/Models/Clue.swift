@@ -9,6 +9,9 @@ struct Clue: Codable, Identifiable, Sendable {
     let answerRegion: String
     let answerContinent: String
     let difficulty: Int
+    let scrollBearing: Double
+    let scrollCenterLat: Double
+    let scrollCenterLng: Double
 
     enum ClueType: String, Codable, Sendable {
         case cultural
@@ -25,5 +28,8 @@ struct Clue: Codable, Identifiable, Sendable {
         case answerCountry = "answer_country"
         case answerRegion = "answer_region"
         case answerContinent = "answer_continent"
+        case scrollBearing = "scroll_bearing"
+        case scrollCenterLat = "scroll_center_lat"
+        case scrollCenterLng = "scroll_center_lng"
     }
 }

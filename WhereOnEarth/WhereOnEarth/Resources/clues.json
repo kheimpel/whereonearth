@@ -7,7 +7,10 @@
     "answer_country": "Japan",
     "answer_region": "East Asia",
     "answer_continent": "Asia",
-    "difficulty": 2
+    "difficulty": 2,
+    "scroll_bearing": 90,
+    "scroll_center_lat": 35,
+    "scroll_center_lng": 100
   },
   {
     "id": "clue_002",
@@ -17,7 +20,10 @@
     "answer_country": "France",
     "answer_region": "Western Europe",
     "answer_continent": "Europe",
-    "difficulty": 1
+    "difficulty": 1,
+    "scroll_bearing": 90,
+    "scroll_center_lat": 48,
+    "scroll_center_lng": -10
   },
   {
     "id": "clue_003",
@@ -27,7 +33,10 @@
     "answer_country": "Austria",
     "answer_region": "Central Europe",
     "answer_continent": "Europe",
-    "difficulty": 3
+    "difficulty": 3,
+    "scroll_bearing": 60,
+    "scroll_center_lat": 47,
+    "scroll_center_lng": 10
   },
   {
     "id": "clue_004",
@@ -37,7 +46,10 @@
     "answer_country": "Sudan",
     "answer_region": "North Africa",
     "answer_continent": "Africa",
-    "difficulty": 3
+    "difficulty": 3,
+    "scroll_bearing": 0,
+    "scroll_center_lat": 15,
+    "scroll_center_lng": 32
   },
   {
     "id": "clue_005",
@@ -47,6 +59,9 @@
     "answer_country": "Germany",
     "answer_region": "Central Europe",
     "answer_continent": "Europe",
-    "difficulty": 1
+    "difficulty": 1,
+    "scroll_bearing": 90,
+    "scroll_center_lat": 52,
+    "scroll_center_lng": 0
   }
 ]

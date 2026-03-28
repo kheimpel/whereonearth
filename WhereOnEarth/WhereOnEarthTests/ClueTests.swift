@@ -12,7 +12,10 @@ import Testing
         "answer_country": "Japan",
         "answer_region": "East Asia",
         "answer_continent": "Asia",
-        "difficulty": 2
+        "difficulty": 2,
+        "scroll_bearing": 90,
+        "scroll_center_lat": 35,
+        "scroll_center_lng": 100
     }
     """.data(using: .utf8)!
 

@@ -6,7 +6,8 @@ import Testing
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
-        difficulty: 1
+        difficulty: 1,
+        scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: 140.0, for: clue)
     #expect(result.points == 3)
@@ -18,7 +19,8 @@ import Testing
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
-        difficulty: 1
+        difficulty: 1,
+        scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: 120.0, for: clue)
     #expect(result.points == 2)
@@ -30,7 +32,8 @@ import Testing
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
-        difficulty: 1
+        difficulty: 1,
+        scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: 80.0, for: clue)
     #expect(result.points == 1)
@@ -42,7 +45,8 @@ import Testing
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
-        difficulty: 1
+        difficulty: 1,
+        scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: -80.0, for: clue)
     #expect(result.points == 0)
@@ -54,7 +58,8 @@ import Testing
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 170.0, answerCountry: "Fiji",
         answerRegion: "Oceania", answerContinent: "Oceania",
-        difficulty: 1
+        difficulty: 1,
+        scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: -175.0, for: clue)
     #expect(result.points == 2)

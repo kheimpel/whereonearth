@@ -5,19 +5,18 @@ struct MapStripView: View {
     let onSubmit: (Double) -> Void
     let geoData: GeoData
 
-    @State private var longitude: Double = 0.0
+    @State private var scrollT: Double = 0.0
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text(longitudeLabel)
-                .font(.caption)
-                .fontDesign(.monospaced)
-                .foregroundStyle(Color(hex: "D4A843"))
-                .padding(.top, 4)
-
+        ZStack {
+            // Full-screen map canvas
             Canvas { context, size in
                 let w = size.width
                 let h = size.height
+
+                let pos = greatCirclePosition(t: scrollT)
+                let centerLat = pos.lat
+                let centerLng = pos.lng
 
                 // 1. Ocean background
                 context.fill(
@@ -26,89 +25,68 @@ struct MapStripView: View {
                 )
 
                 // 2. Graticule
-                let latLines: [Double] = [-60, -40, -20, 0, 20, 40, 60]
-                for lat in latLines {
-                    let y = latToY(lat, height: h)
-                    var line = Path()
-                    line.move(to: CGPoint(x: 0, y: y))
-                    line.addLine(to: CGPoint(x: w, y: y))
-                    let opacity: Double = lat == 0 ? 0.15 : 0.06
-                    context.stroke(line, with: .color(Color(hex: "D4A843").opacity(opacity)), lineWidth: 0.5)
-                }
-                let lngLines = stride(from: -180.0, through: 180.0, by: 30.0)
-                for lngLine in lngLines {
-                    let x = lngToX(lngLine, center: longitude, width: w)
-                    if x >= -w && x <= w * 2 {
-                        var line = Path()
-                        line.move(to: CGPoint(x: x, y: 0))
-                        line.addLine(to: CGPoint(x: x, y: h))
-                        context.stroke(line, with: .color(Color(hex: "D4A843").opacity(0.06)), lineWidth: 0.5)
-                    }
-                }
+                drawGraticule(context: context, w: w, h: h,
+                              centerLat: centerLat, centerLng: centerLng)
 
                 // 3. Land fills
-                for offset in [-360.0, 0.0, 360.0] {
-                    for polygon in geoData.landPolygons {
-                        let path = buildPath(points: polygon.points, lngOffset: offset, center: longitude, width: w, height: h)
-                        context.fill(path, with: .color(Color(hex: "14213D")))
-                    }
+                for polygon in geoData.landPolygons {
+                    let path = buildProjectedPath(
+                        points: polygon.points,
+                        centerLat: centerLat, centerLng: centerLng,
+                        w: w, h: h, close: true
+                    )
+                    context.fill(path, with: .color(Color(hex: "1A2A4A").opacity(0.8)))
                 }
 
                 // 4. Coastline strokes
-                for offset in [-360.0, 0.0, 360.0] {
-                    for line in geoData.coastlines {
-                        let path = buildPath(points: line.points, lngOffset: offset, center: longitude, width: w, height: h)
-                        context.stroke(path, with: .color(Color(hex: "D4A843").opacity(0.5)), lineWidth: 0.8)
-                    }
+                for line in geoData.coastlines {
+                    let path = buildProjectedPath(
+                        points: line.points,
+                        centerLat: centerLat, centerLng: centerLng,
+                        w: w, h: h, close: false
+                    )
+                    context.stroke(
+                        path,
+                        with: .color(Color(hex: "D4A843").opacity(0.7)),
+                        lineWidth: 1.2
+                    )
                 }
 
-                // 5. Vignette
-                let vignetteWidth = w * 0.25
-                let leftGrad = Gradient(stops: [
-                    .init(color: .black.opacity(0.4), location: 0),
-                    .init(color: .black.opacity(0), location: 1)
-                ])
-                let rightGrad = Gradient(stops: [
-                    .init(color: .black.opacity(0), location: 0),
-                    .init(color: .black.opacity(0.4), location: 1)
-                ])
-                context.fill(
-                    Path(CGRect(x: 0, y: 0, width: vignetteWidth, height: h)),
-                    with: .linearGradient(leftGrad, startPoint: CGPoint(x: 0, y: h/2), endPoint: CGPoint(x: vignetteWidth, y: h/2))
-                )
-                context.fill(
-                    Path(CGRect(x: w - vignetteWidth, y: 0, width: vignetteWidth, height: h)),
-                    with: .linearGradient(rightGrad, startPoint: CGPoint(x: w - vignetteWidth, y: h/2), endPoint: CGPoint(x: w, y: h/2))
-                )
+                // 5. Globe edge vignette — radial gradient from center (transparent) to edges (black)
+                drawVignette(context: context, w: w, h: h)
 
-                // 6. Pin
-                let centerX = w / 2
-                let pinTop = h * 0.1
-                let pinBottom = h * 0.9
-
-                var pinLine = Path()
-                pinLine.move(to: CGPoint(x: centerX, y: pinTop))
-                pinLine.addLine(to: CGPoint(x: centerX, y: pinBottom))
-                context.stroke(pinLine, with: .color(Color(hex: "D4A843")), lineWidth: 2)
-
-                let dotSize: CGFloat = 8
-                let dotRect = CGRect(x: centerX - dotSize / 2, y: pinTop - dotSize / 2, width: dotSize, height: dotSize)
-                context.fill(Circle().path(in: dotRect), with: .color(Color(hex: "D4A843")))
+                // 6. Center pin
+                drawPin(context: context, w: w, h: h)
             }
-            .frame(maxHeight: .infinity)
+            .ignoresSafeArea()
 
-            Button("Lock In") {
-                onSubmit(longitude)
+            // Overlay UI
+            VStack {
+                Text(longitudeLabel)
+                    .font(.caption)
+                    .fontDesign(.monospaced)
+                    .foregroundStyle(Color(hex: "D4A843").opacity(0.8))
+                    .padding(.top, 8)
+
+                Spacer()
+
+                Button(action: {
+                    let currentLng = greatCirclePosition(t: scrollT).lng
+                    onSubmit(currentLng)
+                }) {
+                    Text("Lock In")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(hex: "D4A843").opacity(0.7))
+                .controlSize(.small)
+                .padding(.bottom, 2)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(Color(hex: "D4A843"))
-            .padding(.top, 4)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "0C1425"))
         .focusable()
         .digitalCrownRotation(
-            $longitude,
+            $scrollT,
             from: -180.0,
             through: 180.0,
             by: 1.0,
@@ -118,45 +96,192 @@ struct MapStripView: View {
         )
     }
 
-    private var longitudeLabel: String {
-        let absLng = abs(longitude)
-        let dir = longitude >= 0 ? "E" : "W"
-        return String(format: "%.0f\u{00B0}%@", absLng, dir)
+    // MARK: - Great Circle Navigation
+
+    private func greatCirclePosition(t: Double) -> (lat: Double, lng: Double) {
+        let tRad = t * .pi / 180
+        let lat0 = clue.scrollCenterLat * .pi / 180
+        let lng0 = clue.scrollCenterLng * .pi / 180
+        let bearing = clue.scrollBearing * .pi / 180
+
+        let lat = asin(sin(lat0) * cos(tRad) + cos(lat0) * sin(tRad) * cos(bearing))
+        let lng = lng0 + atan2(sin(bearing) * sin(tRad) * cos(lat0),
+                                cos(tRad) - sin(lat0) * sin(lat))
+
+        return (lat: lat * 180 / .pi, lng: lng * 180 / .pi)
     }
 
-    private func lngToX(_ lng: Double, center: Double, width: Double) -> Double {
-        let adjusted = ((lng - center + 540).truncatingRemainder(dividingBy: 360)) - 180
-        return (adjusted / 360) * width * 2.5 + width / 2
+    // MARK: - Orthographic Projection
+
+    private let visibleRange: Double = 18.0
+
+    private func project(_ lat: Double, _ lng: Double,
+                         centerLat: Double, centerLng: Double,
+                         w: Double, h: Double) -> (x: Double, y: Double, visible: Bool) {
+        let phi = lat * .pi / 180
+        let lam = lng * .pi / 180
+        let phi1 = centerLat * .pi / 180
+        let lam0 = centerLng * .pi / 180
+
+        let cosC = sin(phi1) * sin(phi) + cos(phi1) * cos(phi) * cos(lam - lam0)
+        let visible = cosC > 0
+
+        let x = cos(phi) * sin(lam - lam0)
+        let y = cos(phi1) * sin(phi) - sin(phi1) * cos(phi) * cos(lam - lam0)
+
+        let scale = min(w, h) / 2 / sin(visibleRange * .pi / 180)
+
+        return (x: w / 2 + x * scale, y: h / 2 - y * scale, visible: visible)
     }
 
-    private func latToY(_ lat: Double, height: Double) -> Double {
-        let maxLat: Double = 78.0
-        let clamped = max(-maxLat, min(maxLat, lat))
-        let rad = clamped * .pi / 180
-        let mercY = log(tan(.pi / 4 + rad / 2))
-        let maxMercY = log(tan(.pi / 4 + (maxLat * .pi / 180) / 2))
-        return height / 2 - (mercY / maxMercY) * (height / 2) * 0.85
-    }
+    // MARK: - Path Building
 
-    private func buildPath(points: [(Double, Double)], lngOffset: Double, center: Double, width: Double, height: Double) -> Path {
+    private func buildProjectedPath(points: [(Double, Double)],
+                                     centerLat: Double, centerLng: Double,
+                                     w: Double, h: Double, close: Bool) -> Path {
         var path = Path()
-        var prevX: Double? = nil
-        let halfWidth = width / 2
+        var started = false
+        var prevVisible = false
 
         for (lng, lat) in points {
-            let x = lngToX(lng + lngOffset, center: center, width: width)
-            let y = latToY(lat, height: height)
-            let pt = CGPoint(x: x, y: y)
+            let proj = project(lat, lng, centerLat: centerLat, centerLng: centerLng, w: w, h: h)
+            let pt = CGPoint(x: proj.x, y: proj.y)
 
-            if let px = prevX, abs(x - px) > halfWidth {
+            if !proj.visible {
+                prevVisible = false
+                started = false
+                continue
+            }
+
+            // Skip points way off screen
+            if pt.x < -w || pt.x > w * 2 || pt.y < -h || pt.y > h * 2 {
+                prevVisible = false
+                started = false
+                continue
+            }
+
+            if !started || !prevVisible {
                 path.move(to: pt)
-            } else if path.isEmpty {
-                path.move(to: pt)
+                started = true
             } else {
                 path.addLine(to: pt)
             }
-            prevX = x
+            prevVisible = true
         }
+        if close { path.closeSubpath() }
         return path
+    }
+
+    // MARK: - Drawing
+
+    private func drawGraticule(context: GraphicsContext, w: Double, h: Double,
+                                centerLat: Double, centerLng: Double) {
+        // Latitude lines every 10° from -80 to 80
+        for lat in stride(from: -80.0, through: 80.0, by: 10.0) {
+            var line = Path()
+            var lineStarted = false
+            var prevVisible = false
+
+            for lngSample in stride(from: -180.0, through: 180.0, by: 5.0) {
+                let proj = project(lat, lngSample, centerLat: centerLat, centerLng: centerLng, w: w, h: h)
+                let pt = CGPoint(x: proj.x, y: proj.y)
+
+                if !proj.visible {
+                    prevVisible = false
+                    lineStarted = false
+                    continue
+                }
+
+                if !lineStarted || !prevVisible {
+                    line.move(to: pt)
+                    lineStarted = true
+                } else {
+                    line.addLine(to: pt)
+                }
+                prevVisible = true
+            }
+
+            let opacity: Double = lat == 0 ? 0.12 : 0.04
+            context.stroke(line, with: .color(Color(hex: "D4A843").opacity(opacity)), lineWidth: 0.5)
+        }
+
+        // Longitude lines every 15°
+        for lngLine in stride(from: -180.0, through: 165.0, by: 15.0) {
+            var line = Path()
+            var lineStarted = false
+            var prevVisible = false
+
+            for latSample in stride(from: -90.0, through: 90.0, by: 5.0) {
+                let proj = project(latSample, lngLine, centerLat: centerLat, centerLng: centerLng, w: w, h: h)
+                let pt = CGPoint(x: proj.x, y: proj.y)
+
+                if !proj.visible {
+                    prevVisible = false
+                    lineStarted = false
+                    continue
+                }
+
+                if !lineStarted || !prevVisible {
+                    line.move(to: pt)
+                    lineStarted = true
+                } else {
+                    line.addLine(to: pt)
+                }
+                prevVisible = true
+            }
+
+            let opacity: Double = lngLine == 0 ? 0.12 : 0.04
+            context.stroke(line, with: .color(Color(hex: "D4A843").opacity(opacity)), lineWidth: 0.5)
+        }
+    }
+
+    private func drawVignette(context: GraphicsContext, w: Double, h: Double) {
+        let center = CGPoint(x: w / 2, y: h / 2)
+        let radius = max(w, h) / 2
+
+        let gradient = Gradient(stops: [
+            .init(color: .black.opacity(0), location: 0),
+            .init(color: .black.opacity(0.5), location: 1),
+        ])
+
+        context.fill(
+            Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius,
+                                   width: radius * 2, height: radius * 2)),
+            with: .radialGradient(
+                gradient,
+                center: center,
+                startRadius: 0,
+                endRadius: radius
+            )
+        )
+    }
+
+    private func drawPin(context: GraphicsContext, w: Double, h: Double) {
+        let centerX = w / 2
+        let pinTop = h * 0.05
+        let pinBottom = h * 0.95
+
+        var pinLine = Path()
+        pinLine.move(to: CGPoint(x: centerX, y: pinTop))
+        pinLine.addLine(to: CGPoint(x: centerX, y: pinBottom))
+        context.stroke(pinLine, with: .color(Color(hex: "D4A843").opacity(0.7)), lineWidth: 1.5)
+
+        let dotSize: CGFloat = 6
+        let dotY = h * 0.5
+        let dotRect = CGRect(
+            x: centerX - dotSize / 2,
+            y: dotY - dotSize / 2,
+            width: dotSize,
+            height: dotSize
+        )
+        context.fill(Circle().path(in: dotRect), with: .color(Color(hex: "D4A843")))
+    }
+
+    private var longitudeLabel: String {
+        let pos = greatCirclePosition(t: scrollT)
+        let lng = pos.lng
+        let absLng = abs(lng)
+        let dir = lng >= 0 ? "E" : "W"
+        return String(format: "%.0f\u{00B0}%@", absLng, dir)
     }
 }
