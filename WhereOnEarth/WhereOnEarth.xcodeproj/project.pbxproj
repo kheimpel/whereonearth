@@ -11,15 +11,31 @@
 		AA000001000000000000002A /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000002B /* MenuView.swift */; };
 		AA000001000000000000003A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000003B /* Assets.xcassets */; };
 		AA000001000000000000004A /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000004B /* PlaceholderTests.swift */; };
+		BB00000100000000000000001A /* Clue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000001B /* Clue.swift */; };
+		BB00000100000000000000002A /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000002B /* GameSession.swift */; };
+		BB00000100000000000000003A /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000003B /* GameEngine.swift */; };
+		BB00000100000000000000004A /* ClueBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000004B /* ClueBank.swift */; };
+		BB00000100000000000000005A /* HapticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000005B /* HapticsService.swift */; };
+		BB00000100000000000000006A /* clues.json in Resources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000006B /* clues.json */; };
+		BB00000100000000000000007A /* ClueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000007B /* ClueTests.swift */; };
+		BB00000100000000000000008A /* GameEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000000000000008B /* GameEngineTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA000001000000000000001B /* WhereOnEarthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereOnEarthApp.swift; sourceTree = "<group>"; };
 		AA000001000000000000002B /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		AA000001000000000000003B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Resources/Assets.xcassets"; sourceTree = "<group>"; };
+		AA000001000000000000003B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000001000000000000004B /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
 		AA000001000000000000005B /* WhereOnEarth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereOnEarth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000001000000000000006B /* WhereOnEarthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereOnEarthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB00000100000000000000001B /* Clue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clue.swift; sourceTree = "<group>"; };
+		BB00000100000000000000002B /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSession.swift; sourceTree = "<group>"; };
+		BB00000100000000000000003B /* GameEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
+		BB00000100000000000000004B /* ClueBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClueBank.swift; sourceTree = "<group>"; };
+		BB00000100000000000000005B /* HapticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsService.swift; sourceTree = "<group>"; };
+		BB00000100000000000000006B /* clues.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = clues.json; sourceTree = "<group>"; };
+		BB00000100000000000000007B /* ClueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClueTests.swift; sourceTree = "<group>"; };
+		BB00000100000000000000008B /* GameEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +70,9 @@
 			children = (
 				AA00000100000000000000BA /* App */,
 				AA00000100000000000000CA /* Views */,
-				AA000001000000000000003B /* Assets.xcassets */,
+				BB0000010000000000000009A /* Models */,
+				BB000001000000000000000AA /* Services */,
+				BB000001000000000000000BA /* Resources */,
 			);
 			path = WhereOnEarth;
 			sourceTree = "<group>";
@@ -76,10 +94,43 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		BB0000010000000000000009A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000100000000000000001B /* Clue.swift */,
+				BB00000100000000000000002B /* GameSession.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BB000001000000000000000AA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000100000000000000003B /* GameEngine.swift */,
+				BB00000100000000000000004B /* ClueBank.swift */,
+				BB00000100000000000000005B /* HapticsService.swift */,
+			);
+			name = Services;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BB000001000000000000000BA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA000001000000000000003B /* Assets.xcassets */,
+				BB00000100000000000000006B /* clues.json */,
+			);
+			name = Resources;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		AA00000100000000000000DA /* WhereOnEarthTests */ = {
 			isa = PBXGroup;
 			children = (
 				AA000001000000000000004B /* PlaceholderTests.swift */,
+				BB00000100000000000000007B /* ClueTests.swift */,
+				BB00000100000000000000008B /* GameEngineTests.swift */,
 			);
 			path = WhereOnEarthTests;
 			sourceTree = "<group>";
@@ -173,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000001000000000000003A /* Assets.xcassets in Resources */,
+				BB00000100000000000000006A /* clues.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +237,11 @@
 			files = (
 				AA000001000000000000001A /* WhereOnEarthApp.swift in Sources */,
 				AA000001000000000000002A /* MenuView.swift in Sources */,
+				BB00000100000000000000001A /* Clue.swift in Sources */,
+				BB00000100000000000000002A /* GameSession.swift in Sources */,
+				BB00000100000000000000003A /* GameEngine.swift in Sources */,
+				BB00000100000000000000004A /* ClueBank.swift in Sources */,
+				BB00000100000000000000005A /* HapticsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +250,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000001000000000000004A /* PlaceholderTests.swift in Sources */,
+				BB00000100000000000000007A /* ClueTests.swift in Sources */,
+				BB00000100000000000000008A /* GameEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

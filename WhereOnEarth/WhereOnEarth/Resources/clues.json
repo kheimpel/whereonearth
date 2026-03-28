@@ -1,0 +1,52 @@
+[
+  {
+    "id": "clue_001",
+    "type": "cultural",
+    "text": "Trains arrive within 7 seconds of schedule on average.",
+    "answer_longitude": 139.7,
+    "answer_country": "Japan",
+    "answer_region": "East Asia",
+    "answer_continent": "Asia",
+    "difficulty": 2
+  },
+  {
+    "id": "clue_002",
+    "type": "landmark",
+    "text": "This tower was supposed to be temporary, built for a world fair in 1889.",
+    "answer_longitude": 2.3,
+    "answer_country": "France",
+    "answer_region": "Western Europe",
+    "answer_continent": "Europe",
+    "difficulty": 1
+  },
+  {
+    "id": "clue_003",
+    "type": "food",
+    "text": "This country invented the croissant.",
+    "answer_longitude": 16.4,
+    "answer_country": "Austria",
+    "answer_region": "Central Europe",
+    "answer_continent": "Europe",
+    "difficulty": 3
+  },
+  {
+    "id": "clue_004",
+    "type": "cultural",
+    "text": "This country has more pyramids than Egypt.",
+    "answer_longitude": 32.5,
+    "answer_country": "Sudan",
+    "answer_region": "North Africa",
+    "answer_continent": "Africa",
+    "difficulty": 3
+  },
+  {
+    "id": "clue_005",
+    "type": "language",
+    "text": "Danke schoen.",
+    "answer_longitude": 10.4,
+    "answer_country": "Germany",
+    "answer_region": "Central Europe",
+    "answer_continent": "Europe",
+    "difficulty": 1
+  }
+]
