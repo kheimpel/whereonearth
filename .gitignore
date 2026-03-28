@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Xcode
+build/
+DerivedData/
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+.venv/
+venv/
+
+# Pipeline output
+pipeline/output/
+
+# Generated tiles are checked in (they go to Assets.xcassets)
+# but the intermediate full-strip PNGs are not
+pipeline/*.png
