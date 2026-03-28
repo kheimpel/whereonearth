@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MenuView: View {
+    private let clueBank = ClueBank()
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
@@ -11,7 +13,7 @@ struct MenuView: View {
                     .foregroundStyle(Color(hex: "E8DCC8"))
 
                 NavigationLink("Play") {
-                    Text("Game coming soon")
+                    GameView(clues: clueBank.cluesForSession())
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color(hex: "D4A843"))
