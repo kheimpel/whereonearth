@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MenuView: View {
+    let geoData: GeoData
     private let clueBank = ClueBank()
 
     var body: some View {
@@ -13,7 +14,7 @@ struct MenuView: View {
                     .foregroundStyle(Color(hex: "E8DCC8"))
 
                 NavigationLink("Play") {
-                    GameView(clues: clueBank.cluesForSession())
+                    GameView(clues: clueBank.cluesForSession(), geoData: geoData)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color(hex: "D4A843"))
@@ -35,8 +36,4 @@ extension Color {
             blue: Double(rgb & 0xFF) / 255.0
         )
     }
-}
-
-#Preview {
-    MenuView()
 }

@@ -1,8 +1,9 @@
 projection: web_mercator
 lat_bounds: [-72, 84]
-tile_height: 800   # pixels, @2x
-tile_width: 400    # pixels, @2x
+tile_height: 400   # pixels, @2x (200pt map strip height)
+tile_width: 400    # pixels, @2x (200pt per tile)
 strip_padding_deg: 20
+pixels_per_degree: 22  # controls strip width: 22 * 400° = 8800px total ≈ 20 tiles
 
 styles:
   bg: "#0C1425"

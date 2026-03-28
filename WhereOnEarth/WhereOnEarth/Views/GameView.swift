@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct GameView: View {
+    let geoData: GeoData
     @State private var session: GameSession
 
-    init(clues: [Clue]) {
+    init(clues: [Clue], geoData: GeoData) {
+        self.geoData = geoData
         _session = State(initialValue: GameSession(clues: clues))
     }
 
@@ -18,12 +20,12 @@ struct GameView: View {
                 }
             case .guessing:
                 if let clue = session.currentClue {
-                    MapStripView(clue: clue) { guessLongitude in
+                    MapStripView(clue: clue, onSubmit: { guessLongitude in
                         session.submitGuess(longitude: guessLongitude)
                         if let lastResult = session.results.last {
                             HapticsService.play(for: lastResult.accuracy)
                         }
-                    }
+                    }, geoData: geoData)
                 }
             case .showingResult:
                 if let clue = session.currentClue, let result = session.results.last {

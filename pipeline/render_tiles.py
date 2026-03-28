@@ -33,7 +33,6 @@ def render_strip(config, level_name):
     styles = config["styles"]
     lat_min, lat_max = config["lat_bounds"]
     pad = config["strip_padding_deg"]
-    tile_h = config["tile_height"]
 
     lng_min = -180 - pad
     lng_max = 180 + pad
@@ -41,13 +40,13 @@ def render_strip(config, level_name):
 
     merc_y_min = mercator_y(lat_min)
     merc_y_max = mercator_y(lat_max)
-    merc_y_range = merc_y_max - merc_y_min
 
-    pixels_per_degree_lng = tile_h / math.degrees(merc_y_range)
-    strip_width_px = int(pixels_per_degree_lng * lng_range)
+    ppd = config.get("pixels_per_degree", 22)
+    strip_width_px = int(ppd * lng_range)
+    strip_height_px = int(ppd * math.degrees(merc_y_max - merc_y_min))
 
     fig_w = strip_width_px / 100
-    fig_h = tile_h / 100
+    fig_h = strip_height_px / 100
     fig, ax = plt.subplots(1, 1, figsize=(fig_w, fig_h), dpi=100)
     fig.patch.set_facecolor(styles["bg"])
     ax.set_facecolor(styles["bg"])
@@ -140,9 +139,9 @@ def render_strip(config, level_name):
 def slice_tiles(strip_img, config, level_name):
     """Slice a full strip image into individual tiles."""
     tile_w = config["tile_width"]
-    tile_h = config["tile_height"]
     pad = config["strip_padding_deg"]
 
+    tile_h = config["tile_height"]
     strip_w, strip_h = strip_img.size
 
     # Calculate pixel offset for the padding region
@@ -167,6 +166,9 @@ def slice_tiles(strip_img, config, level_name):
             padded = Image.new("RGB", (tile_w, tile_h), config["styles"]["bg"])
             padded.paste(tile, (0, 0))
             tile = padded
+
+        if tile.size[1] != tile_h:
+            tile = tile.resize((tile.size[0], tile_h), Image.LANCZOS)
 
         tile_path = output_dir / f"tile_{i:02d}@2x.png"
         tile.save(tile_path, "PNG", optimize=True)

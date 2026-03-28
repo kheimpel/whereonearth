@@ -23,6 +23,9 @@
 		CC00000100000000000000002A /* MapStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00000100000000000000002B /* MapStripView.swift */; };
 		CC00000100000000000000003A /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00000100000000000000003B /* ResultView.swift */; };
 		CC00000100000000000000004A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00000100000000000000004B /* GameView.swift */; };
+		FF00000100000000000000001A /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000001B /* GeoData.swift */; };
+		FF00000100000000000000002A /* ne_110m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000002B /* ne_110m_land.geojson */; };
+		FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000003B /* ne_110m_coastline.geojson */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +47,9 @@
 		CC00000100000000000000002B /* MapStripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStripView.swift; sourceTree = "<group>"; };
 		CC00000100000000000000003B /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		CC00000100000000000000004B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		FF00000100000000000000001B /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
+		FF00000100000000000000002B /* ne_110m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_land.geojson; sourceTree = "<group>"; };
+		FF00000100000000000000003B /* ne_110m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_coastline.geojson; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +117,7 @@
 			children = (
 				BB00000100000000000000001B /* Clue.swift */,
 				BB00000100000000000000002B /* GameSession.swift */,
+				FF00000100000000000000001B /* GeoData.swift */,
 			);
 			name = Models;
 			path = Models;
@@ -132,6 +139,8 @@
 			children = (
 				AA000001000000000000003B /* Assets.xcassets */,
 				BB00000100000000000000006B /* clues.json */,
+				FF00000100000000000000002B /* ne_110m_land.geojson */,
+				FF00000100000000000000003B /* ne_110m_coastline.geojson */,
 			);
 			name = Resources;
 			path = Resources;
@@ -256,6 +265,8 @@
 			files = (
 				AA000001000000000000003A /* Assets.xcassets in Resources */,
 				BB00000100000000000000006A /* clues.json in Resources */,
+				FF00000100000000000000002A /* ne_110m_land.geojson in Resources */,
+				FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +288,7 @@
 				CC00000100000000000000002A /* MapStripView.swift in Sources */,
 				CC00000100000000000000003A /* ResultView.swift in Sources */,
 				CC00000100000000000000004A /* GameView.swift in Sources */,
+				FF00000100000000000000001A /* GeoData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
