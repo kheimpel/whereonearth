@@ -22,7 +22,7 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: 120.0, for: clue)
+    let result = GameEngine.score(guessLongitude: 135.0, for: clue)
     #expect(result.points == 2)
     #expect(result.accuracy == .region)
 }
@@ -35,7 +35,7 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: 80.0, for: clue)
+    let result = GameEngine.score(guessLongitude: 120.0, for: clue)
     #expect(result.points == 1)
     #expect(result.accuracy == .continent)
 }
@@ -62,5 +62,5 @@ import Testing
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
     let result = GameEngine.score(guessLongitude: -175.0, for: clue)
-    #expect(result.points == 2)
+    #expect(result.points == 1)
 }

@@ -12,16 +12,22 @@ struct ResultView: View {
                 .fontWeight(.heavy)
                 .foregroundStyle(accuracyColor)
 
-            Text("+\(result.points)")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundStyle(accuracyColor)
+            PhaseAnimator([false, true], trigger: result.points) { phase in
+                Text("+\(result.points)")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(accuracyColor)
+                    .scaleEffect(phase ? 1.0 : 0.3)
+                    .opacity(phase ? 1.0 : 0.0)
+            } animation: { _ in
+                .spring(duration: 0.6, bounce: 0.3)
+            }
 
             Text(clue.answerCountry)
                 .font(.caption)
                 .foregroundStyle(Color(hex: "E8DCC8"))
 
-            Text(String(format: "%.0f\u{00B0} off", result.distanceDegrees))
+            Text(distanceKmLabel)
                 .font(.caption2)
                 .fontDesign(.monospaced)
                 .foregroundStyle(Color(hex: "E8DCC8").opacity(0.6))
@@ -42,6 +48,17 @@ struct ResultView: View {
         case .region: return "RIGHT REGION"
         case .continent: return "RIGHT CONTINENT"
         case .wrong: return "WRONG"
+        }
+    }
+
+    private var distanceKmLabel: String {
+        let km = result.distanceKm
+        if km < 1 {
+            return "spot on"
+        } else if km < 100 {
+            return String(format: "%.0f km off", km)
+        } else {
+            return String(format: "%.0fk km off", km / 1000)
         }
     }
 

@@ -39,9 +39,9 @@ final class GameSession {
         phase = .guessing
     }
 
-    func submitGuess(longitude: Double) {
+    func submitGuess(lat: Double, lng: Double) {
         guard let clue = currentClue else { return }
-        let result = GameEngine.score(guessLongitude: longitude, for: clue)
+        let result = GameEngine.score(guessLat: lat, guessLng: lng, for: clue)
         results.append(result)
         phase = .showingResult
     }

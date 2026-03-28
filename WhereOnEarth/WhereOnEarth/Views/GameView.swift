@@ -20,8 +20,8 @@ struct GameView: View {
                 }
             case .guessing:
                 if let clue = session.currentClue {
-                    MapStripView(clue: clue, onSubmit: { guessLongitude in
-                        session.submitGuess(longitude: guessLongitude)
+                    MapStripView(clue: clue, onSubmit: { (lat, lng) in
+                        session.submitGuess(lat: lat, lng: lng)
                         if let lastResult = session.results.last {
                             HapticsService.play(for: lastResult.accuracy)
                         }
