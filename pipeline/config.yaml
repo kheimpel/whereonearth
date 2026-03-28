@@ -1,0 +1,22 @@
+projection: web_mercator
+lat_bounds: [-72, 84]
+tile_height: 800   # pixels, @2x
+tile_width: 400    # pixels, @2x
+strip_padding_deg: 20
+
+styles:
+  bg: "#0C1425"
+  coastline: "#D4A843"
+  coastline_width: 1.5
+  land_fill: "#14213D"
+  border: "#2A3A5C"
+  river: "#1A3055"
+  graticule_color: "#D4A843"
+  graticule_alpha: 0.08
+
+levels:
+  L1:
+    layers:
+      - land
+      - coastline
+    source_scale: "110m"
