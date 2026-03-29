@@ -36,14 +36,14 @@ struct GameView: View {
                     }
                 }
             case .finished:
-                VStack(spacing: 4) {
+                VStack(spacing: Theme.spacingSM) {
                     Spacer()
                     Text(formattedScore(session.totalScore))
-                        .font(Theme.font(size: 40, weight: .light))
+                        .font(Theme.display)
                         .foregroundStyle(Theme.gold)
                         .minimumScaleFactor(0.6)
                     Text("out of \(formattedScore(session.maxPossibleScore))")
-                        .font(Theme.font(size: 11))
+                        .font(Theme.caption)
                         .foregroundStyle(Theme.parchment.opacity(0.4))
                         .minimumScaleFactor(0.7)
                     Spacer()
@@ -51,9 +51,10 @@ struct GameView: View {
                         .fill(Theme.gold.opacity(0.15))
                         .frame(width: 40, height: 0.5)
                     Spacer()
-                        .frame(height: 12)
+                        .frame(height: Theme.spacingLG)
                     Text("SESSION COMPLETE")
-                        .font(Theme.font(size: 9, weight: .medium))
+                        .font(Theme.caption)
+                        .fontWeight(.medium)
                         .tracking(3)
                         .foregroundStyle(Theme.parchment.opacity(0.35))
                     Spacer()

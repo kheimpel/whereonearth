@@ -55,23 +55,20 @@ struct MapStripView: View {
                 .allowsHitTesting(false)
 
             // Bottom UI — button above coordinates
-            VStack(spacing: 3) {
+            VStack(spacing: Theme.spacingXS) {
                 Spacer()
                 if !isScrolling {
                     Button(action: { onSubmit((currentPosition.lat, currentPosition.lng)) }) {
-                        Text("LOCK IN")
-                            .font(.system(size: 10, weight: .semibold, design: .serif))
-                            .tracking(2)
-                            .foregroundStyle(Color(hex: "D4A843").opacity(0.6))
+                        Text("LOCK IN").ghostButton()
                     }
                     .buttonStyle(.plain)
                     .transition(.opacity)
                 }
                 Text(coordinateLabel)
-                    .font(.system(size: 11, weight: .medium, design: .serif))
-                    .foregroundStyle(Color(hex: "E8DCC8").opacity(0.7))
+                    .font(Theme.caption)
+                    .foregroundStyle(Theme.parchment.opacity(0.5))
             }
-            .padding(.bottom, 4)
+            .padding(.bottom, Theme.spacingSM)
             .animation(.easeInOut(duration: 0.3), value: isScrolling)
         }
         .onChange(of: scrollT) {

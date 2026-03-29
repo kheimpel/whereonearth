@@ -5,36 +5,30 @@ struct ClueView: View {
     let onReady: () -> Void
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Theme.spacingLG) {
             Spacer()
 
             Text(clue.type.rawValue.uppercased())
-                .font(Theme.font(size: 9, weight: .medium))
+                .font(Theme.caption)
+                .fontWeight(.medium)
                 .tracking(3)
                 .foregroundStyle(Theme.gold.opacity(0.5))
 
             Text(clue.text)
-                .font(Theme.font(size: 13, weight: .regular))
+                .font(Theme.body)
                 .foregroundStyle(Theme.parchment)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.7)
-                .padding(.horizontal, 8)
+                .padding(.horizontal, Theme.margin)
 
             Spacer()
 
             Button(action: { onReady() }) {
-                Text("GUESS")
-                    .font(Theme.font(size: 12, weight: .medium))
-                    .tracking(3)
-                    .foregroundStyle(Theme.ocean)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background(Theme.gold.opacity(0.8))
-                    .clipShape(Capsule())
+                Text("GUESS").primaryButton()
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 20)
-            .padding(.bottom, 16)
+            .padding(.bottom, Theme.spacingXL)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.ocean)

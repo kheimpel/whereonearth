@@ -7,11 +7,11 @@ struct MenuView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
+            VStack(spacing: Theme.spacingXL) {
                 Spacer()
 
                 Text("WHERE ON\nEARTH")
-                    .font(Theme.font(size: 20, weight: .light))
+                    .font(Theme.title)
                     .tracking(1)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Theme.parchment)
@@ -22,18 +22,11 @@ struct MenuView: View {
                 NavigationLink {
                     GameView(clues: clueBank.cluesForSession(), geoData: geoData, wristMotion: wristMotion)
                 } label: {
-                    Text("PLAY")
-                        .font(Theme.font(size: 12, weight: .medium))
-                        .tracking(3)
-                        .foregroundStyle(Theme.ocean)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(Theme.gold.opacity(0.8))
-                        .clipShape(Capsule())
+                    Text("PLAY").primaryButton()
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 20)
-                .padding(.bottom, 16)
+                .padding(.bottom, Theme.spacingXL)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.ocean)

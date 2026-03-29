@@ -9,10 +9,10 @@ struct ResultView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            // Score — the hero element (out of 5000)
+            // Score — hero element
             PhaseAnimator([false, true], trigger: result.points) { phase in
                 Text(formattedPoints)
-                    .font(Theme.font(size: 40, weight: .light))
+                    .font(Theme.display)
                     .foregroundStyle(Theme.gold)
                     .scaleEffect(phase ? 1.0 : 0.5)
                     .opacity(phase ? 1.0 : 0.0)
@@ -20,52 +20,50 @@ struct ResultView: View {
                 .spring(duration: 0.6, bounce: 0.3)
             }
 
-            // Tier label
+            // Tier
             Text(result.tier)
-                .font(Theme.font(size: 10, weight: .medium))
+                .font(Theme.caption)
+                .fontWeight(.medium)
                 .tracking(3)
                 .foregroundStyle(tierColor)
                 .minimumScaleFactor(0.7)
-                .padding(.top, 2)
+                .padding(.top, Theme.spacingXS)
 
             Spacer()
-                .frame(height: 14)
+                .frame(height: Theme.spacingLG)
 
             Rectangle()
                 .fill(Theme.gold.opacity(0.15))
                 .frame(width: 40, height: 0.5)
 
             Spacer()
-                .frame(height: 10)
+                .frame(height: Theme.spacingMD)
 
             // The answer
             Text("The answer was")
-                .font(Theme.font(size: 9))
+                .font(Theme.caption)
                 .foregroundStyle(Theme.parchment.opacity(0.4))
             Text(clue.answerCountry)
-                .font(Theme.font(size: 16, weight: .medium))
+                .font(Theme.body)
+                .fontWeight(.medium)
                 .foregroundStyle(Theme.parchment)
                 .minimumScaleFactor(0.6)
-                .padding(.top, 2)
+                .padding(.top, Theme.spacingXS)
 
-            // Distance
             Text(distanceKmLabel)
-                .font(Theme.font(size: 9))
+                .font(Theme.caption)
                 .foregroundStyle(Theme.parchment.opacity(0.35))
                 .minimumScaleFactor(0.7)
-                .padding(.top, 4)
+                .padding(.top, Theme.spacingSM)
 
             Spacer()
 
             // Next
             Button(action: { onNext() }) {
-                Text("NEXT")
-                    .font(Theme.font(size: 10, weight: .medium))
-                    .tracking(2)
-                    .foregroundStyle(Theme.gold.opacity(0.5))
+                Text("NEXT").ghostButton()
             }
             .buttonStyle(.plain)
-            .padding(.bottom, 8)
+            .padding(.bottom, Theme.spacingMD)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.ocean)
