@@ -36,20 +36,31 @@ struct GameView: View {
                     }
                 }
             case .finished:
-                VStack(spacing: 12) {
-                    Text("SESSION\nCOMPLETE")
-                        .font(.headline)
-                        .fontWeight(.heavy)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(Color(hex: "D4A843"))
-
-                    Text("\(session.totalScore)/\(session.maxPossibleScore)")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color(hex: "E8DCC8"))
+                VStack(spacing: 4) {
+                    Spacer()
+                    Text("\(session.totalScore)")
+                        .font(Theme.font(size: 44, weight: .light))
+                        .foregroundStyle(Theme.gold)
+                        .minimumScaleFactor(0.6)
+                    Text("out of \(session.maxPossibleScore)")
+                        .font(Theme.font(size: 11))
+                        .foregroundStyle(Theme.parchment.opacity(0.4))
+                        .minimumScaleFactor(0.7)
+                    Spacer()
+                    Rectangle()
+                        .fill(Theme.gold.opacity(0.15))
+                        .frame(width: 40, height: 0.5)
+                    Spacer()
+                        .frame(height: 12)
+                    Text("SESSION COMPLETE")
+                        .font(Theme.font(size: 9, weight: .medium))
+                        .tracking(3)
+                        .foregroundStyle(Theme.parchment.opacity(0.35))
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(hex: "0C1425"))
+                .background(Theme.ocean)
+                .toolbar(.hidden, for: .navigationBar)
             }
         }
         .navigationBarBackButtonHidden(session.phase != .finished)

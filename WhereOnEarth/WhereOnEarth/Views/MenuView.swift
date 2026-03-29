@@ -8,20 +8,36 @@ struct MenuView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Text("WHERE ON\nEARTH")
-                    .font(.title2)
-                    .fontWeight(.heavy)
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(Color(hex: "E8DCC8"))
+                Spacer()
 
-                NavigationLink("Play") {
+                Text("WHERE ON\nEARTH")
+                    .font(Theme.font(size: 20, weight: .light))
+                    .tracking(1)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Theme.parchment)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Spacer()
+
+                NavigationLink {
                     GameView(clues: clueBank.cluesForSession(), geoData: geoData, wristMotion: wristMotion)
+                } label: {
+                    Text("PLAY")
+                        .font(Theme.font(size: 12, weight: .medium))
+                        .tracking(3)
+                        .foregroundStyle(Theme.ocean)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(Theme.gold.opacity(0.8))
+                        .clipShape(Capsule())
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(Color(hex: "D4A843"))
+                .buttonStyle(.plain)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: "0C1425"))
+            .background(Theme.ocean)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 }
@@ -37,4 +53,8 @@ extension Color {
             blue: Double(rgb & 0xFF) / 255.0
         )
     }
+}
+
+#Preview {
+    MenuView(geoData: GeoData(), wristMotion: WristMotion())
 }

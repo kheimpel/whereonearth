@@ -6,25 +6,38 @@ struct ClueView: View {
 
     var body: some View {
         VStack(spacing: 12) {
+            Spacer()
+
             Text(clue.type.rawValue.uppercased())
-                .font(.caption2)
-                .fontWeight(.semibold)
-                .tracking(2)
-                .foregroundStyle(Color(hex: "D4A843").opacity(0.6))
+                .font(Theme.font(size: 9, weight: .medium))
+                .tracking(3)
+                .foregroundStyle(Theme.gold.opacity(0.5))
 
             Text(clue.text)
-                .font(.body)
-                .foregroundStyle(Color(hex: "E8DCC8"))
+                .font(Theme.font(size: 13, weight: .regular))
+                .foregroundStyle(Theme.parchment)
                 .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.7)
                 .padding(.horizontal, 8)
 
-            Button("Guess") {
-                onReady()
+            Spacer()
+
+            Button(action: { onReady() }) {
+                Text("GUESS")
+                    .font(Theme.font(size: 12, weight: .medium))
+                    .tracking(3)
+                    .foregroundStyle(Theme.ocean)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Theme.gold.opacity(0.8))
+                    .clipShape(Capsule())
             }
-            .buttonStyle(.borderedProminent)
-            .tint(Color(hex: "D4A843"))
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "0C1425"))
+        .background(Theme.ocean)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }

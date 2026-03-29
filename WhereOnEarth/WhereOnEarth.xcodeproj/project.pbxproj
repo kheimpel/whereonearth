@@ -28,6 +28,7 @@
 		GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000002B /* ne_50m_coastline.geojson */; };
 		HH00000100000000000000001A /* WristMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000001B /* WristMotion.swift */; };
 		HH00000100000000000000002A /* BrassArmatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000002B /* BrassArmatureView.swift */; };
+		II00000100000000000000001A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = II00000100000000000000001B /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		GG00000100000000000000002B /* ne_50m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_coastline.geojson; sourceTree = "<group>"; };
 		HH00000100000000000000001B /* WristMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristMotion.swift; sourceTree = "<group>"; };
 		HH00000100000000000000002B /* BrassArmatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrassArmatureView.swift; sourceTree = "<group>"; };
+		II00000100000000000000001B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000001000000000000001B /* WhereOnEarthApp.swift */,
+				II00000100000000000000001B /* Theme.swift */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				FF00000100000000000000001A /* GeoData.swift in Sources */,
 				HH00000100000000000000001A /* WristMotion.swift in Sources */,
 				HH00000100000000000000002A /* BrassArmatureView.swift in Sources */,
+				II00000100000000000000001A /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,7 @@ struct MapStripView: View {
     @State private var scrollT: Double = 0.0
     @State private var isScrolling = false
     @State private var lastScrollT: Double = 0.0
+    @State private var initialized = false
 
     private let visibleRange: Double = 18.0
 
@@ -53,26 +54,22 @@ struct MapStripView: View {
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 
-            // Bottom UI
-            VStack(spacing: 2) {
+            // Bottom UI — button above coordinates
+            VStack(spacing: 3) {
                 Spacer()
-                Text(coordinateLabel)
-                    .font(.system(size: 9, weight: .regular, design: .serif))
-                    .foregroundStyle(Color(hex: "D4A843").opacity(0.3))
-                Text(distanceLabel)
-                    .font(.system(size: 9, weight: .light, design: .serif))
-                    .italic()
-                    .foregroundStyle(Color(hex: "D4A843").opacity(distanceOpacity))
                 if !isScrolling {
                     Button(action: { onSubmit((currentPosition.lat, currentPosition.lng)) }) {
                         Text("LOCK IN")
-                            .font(.system(size: 9, weight: .medium, design: .serif))
+                            .font(.system(size: 10, weight: .semibold, design: .serif))
                             .tracking(2)
-                            .foregroundStyle(Color(hex: "D4A843").opacity(0.4))
+                            .foregroundStyle(Color(hex: "D4A843").opacity(0.6))
                     }
                     .buttonStyle(.plain)
                     .transition(.opacity)
                 }
+                Text(coordinateLabel)
+                    .font(.system(size: 11, weight: .medium, design: .serif))
+                    .foregroundStyle(Color(hex: "E8DCC8").opacity(0.7))
             }
             .padding(.bottom, 4)
             .animation(.easeInOut(duration: 0.3), value: isScrolling)
@@ -84,16 +81,27 @@ struct MapStripView: View {
                 if lastScrollT == scrollT { isScrolling = false }
             }
         }
-        .onAppear { wristMotion.start() }
+        .onAppear {
+            wristMotion.start()
+            // Start at a random offset so player must scroll to find the answer (at t=0)
+            if !initialized {
+                let offsets: [Double] = [-120, -90, -60, 60, 90, 120]
+                scrollT = offsets.randomElement() ?? 90
+                initialized = true
+            }
+        }
         .onDisappear { wristMotion.stop() }
+        .toolbar(.hidden, for: .navigationBar)
     }
 
     // MARK: - Great Circle Navigation
 
+    /// The great circle is centered on the answer point (t=0 = the answer).
+    /// The player starts at a random offset and scrolls to find t=0.
     private func greatCirclePosition(t: Double) -> (lat: Double, lng: Double) {
         let tRad = t * .pi / 180
-        let lat0 = clue.scrollCenterLat * .pi / 180
-        let lng0 = clue.scrollCenterLng * .pi / 180
+        let lat0 = clue.answerLatitude * .pi / 180
+        let lng0 = clue.answerLongitude * .pi / 180
         let bearing = clue.scrollBearing * .pi / 180
 
         let lat = asin(sin(lat0) * cos(tRad) + cos(lat0) * sin(tRad) * cos(bearing))
@@ -108,35 +116,7 @@ struct MapStripView: View {
         return (lat: lat * 180 / .pi, lng: lngDeg)
     }
 
-    // MARK: - Distance
 
-    private func distanceToGoalKm() -> Double {
-        let pos = currentPosition
-        let lat1 = pos.lat * .pi / 180
-        let lat2 = clue.answerLatitude * .pi / 180
-        let lng1 = pos.lng * .pi / 180
-        let lng2 = clue.answerLongitude * .pi / 180
-        let dlat = lat2 - lat1
-        let dlng = lng2 - lng1
-        let a = sin(dlat / 2) * sin(dlat / 2) +
-                cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2)
-        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return 6371.0 * c
-    }
-
-    private var distanceLabel: String {
-        let km = distanceToGoalKm()
-        if km < 100 { return String(format: "%.0f km", km) }
-        if km < 1000 { return String(format: "%.0f km", km) }
-        return String(format: "%.1fk km", km / 1000)
-    }
-
-    private var distanceOpacity: Double {
-        let km = distanceToGoalKm()
-        if km < 500 { return 0.7 }
-        if km < 2000 { return 0.4 }
-        return 0.25
-    }
 
     // MARK: - Labels
 
