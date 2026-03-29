@@ -29,6 +29,7 @@
 		HH00000100000000000000001A /* WristMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000001B /* WristMotion.swift */; };
 		HH00000100000000000000002A /* BrassArmatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000002B /* BrassArmatureView.swift */; };
 		II00000100000000000000001A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = II00000100000000000000001B /* Theme.swift */; };
+		JJ00000100000000000000001A /* continents.json in Resources */ = {isa = PBXBuildFile; fileRef = JJ00000100000000000000001B /* continents.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		HH00000100000000000000001B /* WristMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristMotion.swift; sourceTree = "<group>"; };
 		HH00000100000000000000002B /* BrassArmatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrassArmatureView.swift; sourceTree = "<group>"; };
 		II00000100000000000000001B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		JJ00000100000000000000001B /* continents.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = continents.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				BB00000100000000000000006B /* clues.json */,
 				GG00000100000000000000001B /* ne_50m_land.geojson */,
 				GG00000100000000000000002B /* ne_50m_coastline.geojson */,
+				JJ00000100000000000000001B /* continents.json */,
 			);
 			name = Resources;
 			path = Resources;
@@ -276,6 +279,7 @@
 				BB00000100000000000000006A /* clues.json in Resources */,
 				GG00000100000000000000001A /* ne_50m_land.geojson in Resources */,
 				GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */,
+				JJ00000100000000000000001A /* continents.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

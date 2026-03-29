@@ -54,9 +54,17 @@ struct MapStripView: View {
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 
-            // Bottom UI — button above coordinates
+            // Bottom UI — continent, button, coordinates
             VStack(spacing: Theme.spacingXS) {
                 Spacer()
+                if let continent = continentLabel {
+                    Text(continent)
+                        .font(Theme.caption)
+                        .fontWeight(.medium)
+                        .tracking(2)
+                        .foregroundStyle(Theme.gold.opacity(0.3))
+                        .transition(.opacity)
+                }
                 if !isScrolling {
                     Button(action: { onSubmit((currentPosition.lat, currentPosition.lng)) }) {
                         Text("LOCK IN").ghostButton()
@@ -124,6 +132,11 @@ struct MapStripView: View {
         let latDir = pos.lat >= 0 ? "N" : "S"
         let lngDir = pos.lng >= 0 ? "E" : "W"
         return String(format: "%.1f°%@ · %.1f°%@", abs(pos.lat), latDir, abs(pos.lng), lngDir)
+    }
+
+    private var continentLabel: String? {
+        let pos = currentPosition
+        return geoData.continentAt(lat: pos.lat, lng: pos.lng)?.uppercased()
     }
 
     // MARK: - Orthographic Projection

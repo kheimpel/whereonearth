@@ -8,13 +8,71 @@ struct GeoLine: Sendable {
     let points: [(Double, Double)]  // (lng, lat) pairs
 }
 
+struct ContinentRegion: Sendable {
+    let name: String
+    let polygons: [[(Double, Double)]]  // array of rings, each ring is [(lng, lat)]
+}
+
 final class GeoData: Sendable {
     let landPolygons: [GeoPolygon]
     let coastlines: [GeoLine]
+    let continents: [ContinentRegion]
 
     init() {
         landPolygons = Self.loadPolygons(resource: "ne_50m_land")
         coastlines = Self.loadLines(resource: "ne_50m_coastline")
+        continents = Self.loadContinents()
+    }
+
+    /// Find which continent a lat/lng point is on. Returns nil if over ocean.
+    func continentAt(lat: Double, lng: Double) -> String? {
+        for continent in continents {
+            if continent.name == "Antarctica" || continent.name == "Seven seas (open ocean)" {
+                continue
+            }
+            for ring in continent.polygons {
+                if Self.pointInPolygon(lat: lat, lng: lng, polygon: ring) {
+                    return continent.name
+                }
+            }
+        }
+        return nil
+    }
+
+    /// Ray-casting point-in-polygon test
+    private static func pointInPolygon(lat: Double, lng: Double, polygon: [(Double, Double)]) -> Bool {
+        var inside = false
+        let n = polygon.count
+        var j = n - 1
+        for i in 0..<n {
+            let (xi, yi) = polygon[i]  // (lng, lat)
+            let (xj, yj) = polygon[j]
+            if ((yi > lat) != (yj > lat)) &&
+                (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) {
+                inside.toggle()
+            }
+            j = i
+        }
+        return inside
+    }
+
+    private static func loadContinents() -> [ContinentRegion] {
+        guard let url = Bundle.main.url(forResource: "continents", withExtension: "json"),
+              let data = (try? Data(contentsOf: url)),
+              let arr = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]] else {
+            return []
+        }
+        return arr.compactMap { dict in
+            guard let name = dict["name"] as? String,
+                  let polygons = dict["polygons"] as? [[[Any]]] else { return nil }
+            let rings: [[(Double, Double)]] = polygons.compactMap { ring in
+                ring.compactMap { coord in
+                    guard let pair = coord as? [Double], pair.count >= 2 else { return nil }
+                    return (pair[0], pair[1])
+                }
+            }
+            return ContinentRegion(name: name, polygons: rings)
+        }
     }
 
     private static func loadPolygons(resource: String) -> [GeoPolygon] {
