@@ -4,7 +4,7 @@ import Testing
 @Test func scoreRightCountry() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
-        answerLongitude: 139.7, answerCountry: "Japan",
+        answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
@@ -17,7 +17,7 @@ import Testing
 @Test func scoreRightRegion() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
-        answerLongitude: 139.7, answerCountry: "Japan",
+        answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
@@ -30,7 +30,7 @@ import Testing
 @Test func scoreRightContinent() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
-        answerLongitude: 139.7, answerCountry: "Japan",
+        answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
@@ -43,7 +43,7 @@ import Testing
 @Test func scoreWrongContinent() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
-        answerLongitude: 139.7, answerCountry: "Japan",
+        answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
         answerRegion: "East Asia", answerContinent: "Asia",
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
@@ -56,7 +56,7 @@ import Testing
 @Test func scoringWrapsAroundAntimeridian() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
-        answerLongitude: 170.0, answerCountry: "Fiji",
+        answerLongitude: 170.0, answerLatitude: -17.7, answerCountry: "Fiji",
         answerRegion: "Oceania", answerContinent: "Oceania",
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100

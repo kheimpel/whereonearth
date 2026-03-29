@@ -35,7 +35,7 @@ enum GameEngine {
     }
 
     static func score(guessLat: Double, guessLng: Double, for clue: Clue) -> ScoreResult {
-        let answerLat = clue.scrollCenterLat
+        let answerLat = clue.answerLatitude
         let km = haversineDistance(lat1: guessLat, lng1: guessLng,
                                    lat2: answerLat, lng2: clue.answerLongitude)
 
@@ -50,8 +50,8 @@ enum GameEngine {
         }
     }
 
-    // Backward-compatible: uses scrollCenterLat as the guess latitude
+    // Backward-compatible: uses answerLatitude as the guess latitude
     static func score(guessLongitude: Double, for clue: Clue) -> ScoreResult {
-        return score(guessLat: clue.scrollCenterLat, guessLng: guessLongitude, for: clue)
+        return score(guessLat: clue.answerLatitude, guessLng: guessLongitude, for: clue)
     }
 }

@@ -9,6 +9,7 @@ import Testing
         "type": "cultural",
         "text": "Trains arrive within 7 seconds of schedule on average.",
         "answer_longitude": 139.7,
+        "answer_latitude": 35.7,
         "answer_country": "Japan",
         "answer_region": "East Asia",
         "answer_continent": "Asia",

@@ -24,8 +24,6 @@
 		CC00000100000000000000003A /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00000100000000000000003B /* ResultView.swift */; };
 		CC00000100000000000000004A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC00000100000000000000004B /* GameView.swift */; };
 		FF00000100000000000000001A /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000001B /* GeoData.swift */; };
-		FF00000100000000000000002A /* ne_110m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000002B /* ne_110m_land.geojson */; };
-		FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000003B /* ne_110m_coastline.geojson */; };
 		GG00000100000000000000001A /* ne_50m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000001B /* ne_50m_land.geojson */; };
 		GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000002B /* ne_50m_coastline.geojson */; };
 		HH00000100000000000000001A /* WristMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000001B /* WristMotion.swift */; };
@@ -52,8 +50,6 @@
 		CC00000100000000000000003B /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		CC00000100000000000000004B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		FF00000100000000000000001B /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
-		FF00000100000000000000002B /* ne_110m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_land.geojson; sourceTree = "<group>"; };
-		FF00000100000000000000003B /* ne_110m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_coastline.geojson; sourceTree = "<group>"; };
 		GG00000100000000000000001B /* ne_50m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_land.geojson; sourceTree = "<group>"; };
 		GG00000100000000000000002B /* ne_50m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_coastline.geojson; sourceTree = "<group>"; };
 		HH00000100000000000000001B /* WristMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristMotion.swift; sourceTree = "<group>"; };
@@ -149,8 +145,6 @@
 			children = (
 				AA000001000000000000003B /* Assets.xcassets */,
 				BB00000100000000000000006B /* clues.json */,
-				FF00000100000000000000002B /* ne_110m_land.geojson */,
-				FF00000100000000000000003B /* ne_110m_coastline.geojson */,
 				GG00000100000000000000001B /* ne_50m_land.geojson */,
 				GG00000100000000000000002B /* ne_50m_coastline.geojson */,
 			);
@@ -277,8 +271,6 @@
 			files = (
 				AA000001000000000000003A /* Assets.xcassets in Resources */,
 				BB00000100000000000000006A /* clues.json in Resources */,
-				FF00000100000000000000002A /* ne_110m_land.geojson in Resources */,
-				FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */,
 				GG00000100000000000000001A /* ne_50m_land.geojson in Resources */,
 				GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */,
 			);
