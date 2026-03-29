@@ -28,6 +28,8 @@
 		FF00000100000000000000003A /* ne_110m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = FF00000100000000000000003B /* ne_110m_coastline.geojson */; };
 		GG00000100000000000000001A /* ne_50m_land.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000001B /* ne_50m_land.geojson */; };
 		GG00000100000000000000002A /* ne_50m_coastline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = GG00000100000000000000002B /* ne_50m_coastline.geojson */; };
+		HH00000100000000000000001A /* WristMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000001B /* WristMotion.swift */; };
+		HH00000100000000000000002A /* BrassArmatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000002B /* BrassArmatureView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,8 @@
 		FF00000100000000000000003B /* ne_110m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_110m_coastline.geojson; sourceTree = "<group>"; };
 		GG00000100000000000000001B /* ne_50m_land.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_land.geojson; sourceTree = "<group>"; };
 		GG00000100000000000000002B /* ne_50m_coastline.geojson */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ne_50m_coastline.geojson; sourceTree = "<group>"; };
+		HH00000100000000000000001B /* WristMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristMotion.swift; sourceTree = "<group>"; };
+		HH00000100000000000000002B /* BrassArmatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrassArmatureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,7 @@
 				CC00000100000000000000002B /* MapStripView.swift */,
 				CC00000100000000000000003B /* ResultView.swift */,
 				CC00000100000000000000004B /* GameView.swift */,
+				HH00000100000000000000002B /* BrassArmatureView.swift */,
 			);
 			name = Views;
 			path = Views;
@@ -133,6 +138,7 @@
 				BB00000100000000000000003B /* GameEngine.swift */,
 				BB00000100000000000000004B /* ClueBank.swift */,
 				BB00000100000000000000005B /* HapticsService.swift */,
+				HH00000100000000000000001B /* WristMotion.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -297,6 +303,8 @@
 				CC00000100000000000000003A /* ResultView.swift in Sources */,
 				CC00000100000000000000004A /* GameView.swift in Sources */,
 				FF00000100000000000000001A /* GeoData.swift in Sources */,
+				HH00000100000000000000001A /* WristMotion.swift in Sources */,
+				HH00000100000000000000002A /* BrassArmatureView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

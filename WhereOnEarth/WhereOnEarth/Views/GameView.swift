@@ -2,10 +2,12 @@ import SwiftUI
 
 struct GameView: View {
     let geoData: GeoData
+    let wristMotion: WristMotion
     @State private var session: GameSession
 
-    init(clues: [Clue], geoData: GeoData) {
+    init(clues: [Clue], geoData: GeoData, wristMotion: WristMotion) {
         self.geoData = geoData
+        self.wristMotion = wristMotion
         _session = State(initialValue: GameSession(clues: clues))
     }
 
@@ -25,7 +27,7 @@ struct GameView: View {
                         if let lastResult = session.results.last {
                             HapticsService.play(for: lastResult.accuracy)
                         }
-                    }, geoData: geoData)
+                    }, geoData: geoData, wristMotion: wristMotion)
                 }
             case .showingResult:
                 if let clue = session.currentClue, let result = session.results.last {
