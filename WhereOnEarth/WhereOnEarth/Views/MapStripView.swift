@@ -18,6 +18,7 @@ struct MapStripView: View {
 
     var body: some View {
         ZStack {
+            // Canvas map
             TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
                 let time = timeline.date.timeIntervalSinceReferenceDate
                 let lampX = wristMotion.lampX
@@ -31,79 +32,56 @@ struct MapStripView: View {
                     let flicker = 1.0 + sin(time * 2.5) * 0.02
 
                     drawOcean(context: context, w: w, h: h, lamp: lamp, flicker: flicker)
-                    drawGraticule(context: context, w: w, h: h,
-                                  centerLat: pos.lat, centerLng: pos.lng, bearing: brng)
                     drawLand(context: context, w: w, h: h,
-                             centerLat: pos.lat, centerLng: pos.lng, bearing: brng,
-                             lamp: lamp, flicker: flicker)
+                             centerLat: pos.lat, centerLng: pos.lng, bearing: brng)
                     drawCoastlines(context: context, w: w, h: h,
                                    centerLat: pos.lat, centerLng: pos.lng, bearing: brng,
-                                   lamp: lamp, flicker: flicker, time: time)
+                                   flicker: flicker, time: time)
                     drawGreatCirclePath(context: context, w: w, h: h,
                                         centerLat: pos.lat, centerLng: pos.lng, bearing: brng)
                     drawLampVignette(context: context, w: w, h: h, lamp: lamp, flicker: flicker)
-                    drawCompass(context: context, w: w, h: h,
-                                centerLat: pos.lat, centerLng: pos.lng, bearing: brng)
                 }
             }
             .focusable()
-            .digitalCrownRotation(
-                $scrollT,
-                from: -180.0,
-                through: 180.0,
-                by: 2.0,
-                sensitivity: .high,
-                isContinuous: true,
-                isHapticFeedbackEnabled: true
-            )
+            .digitalCrownRotation($scrollT, from: -180.0, through: 180.0,
+                                   by: 2.0, sensitivity: .high,
+                                   isContinuous: true, isHapticFeedbackEnabled: true)
             .ignoresSafeArea()
 
-            // Brass armature overlay (SwiftUI — real shadows + compositing)
+            // Brass armature overlay
             BrassArmatureView(lampX: wristMotion.lampX, lampY: wristMotion.lampY)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 
-            // Overlay UI
-            VStack(spacing: 0) {
-                HStack(spacing: 6) {
-                    Text(latLabel)
-                    Text("·")
-                    Text(lngLabel)
-                }
-                .font(.system(size: 10, weight: .regular, design: .serif))
-                .foregroundStyle(Color(hex: "D4A843").opacity(0.35))
-                .padding(.top, 6)
-
+            // Bottom UI
+            VStack(spacing: 2) {
                 Spacer()
-
+                Text(coordinateLabel)
+                    .font(.system(size: 9, weight: .regular, design: .serif))
+                    .foregroundStyle(Color(hex: "D4A843").opacity(0.3))
                 Text(distanceLabel)
                     .font(.system(size: 9, weight: .light, design: .serif))
                     .italic()
                     .foregroundStyle(Color(hex: "D4A843").opacity(distanceOpacity))
-                    .padding(.bottom, 2)
-
                 if !isScrolling {
                     Button(action: { onSubmit((currentPosition.lat, currentPosition.lng)) }) {
                         Text("LOCK IN")
-                            .font(.system(size: 10, weight: .semibold, design: .serif))
+                            .font(.system(size: 9, weight: .medium, design: .serif))
                             .tracking(2)
+                            .foregroundStyle(Color(hex: "D4A843").opacity(0.4))
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Color(hex: "D4A843").opacity(0.6))
-                    .controlSize(.small)
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                    .padding(.bottom, 2)
+                    .buttonStyle(.plain)
+                    .transition(.opacity)
                 }
             }
+            .padding(.bottom, 4)
             .animation(.easeInOut(duration: 0.3), value: isScrolling)
         }
         .onChange(of: scrollT) {
             isScrolling = true
             lastScrollT = scrollT
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                if lastScrollT == scrollT {
-                    isScrolling = false
-                }
+                if lastScrollT == scrollT { isScrolling = false }
             }
         }
         .onAppear { wristMotion.start() }
@@ -135,7 +113,7 @@ struct MapStripView: View {
     private func distanceToGoalKm() -> Double {
         let pos = currentPosition
         let lat1 = pos.lat * .pi / 180
-        let lat2 = clue.scrollCenterLat * .pi / 180
+        let lat2 = clue.answerLatitude * .pi / 180
         let lng1 = pos.lng * .pi / 180
         let lng2 = clue.answerLongitude * .pi / 180
         let dlat = lat2 - lat1
@@ -160,10 +138,19 @@ struct MapStripView: View {
         return 0.25
     }
 
+    // MARK: - Labels
+
+    private var coordinateLabel: String {
+        let pos = currentPosition
+        let latDir = pos.lat >= 0 ? "N" : "S"
+        let lngDir = pos.lng >= 0 ? "E" : "W"
+        return String(format: "%.1f°%@ · %.1f°%@", abs(pos.lat), latDir, abs(pos.lng), lngDir)
+    }
+
     // MARK: - Orthographic Projection
 
     private func localBearing(at t: Double) -> Double {
-        let dt = 0.5
+        let dt = 2.0  // degrees — increased from 0.5 for stability near apex
         let p1 = greatCirclePosition(t: t - dt)
         let p2 = greatCirclePosition(t: t + dt)
         let lat1 = p1.lat * .pi / 180
@@ -227,70 +214,29 @@ struct MapStripView: View {
 
     private func drawOcean(context: GraphicsContext, w: Double, h: Double,
                            lamp: CGPoint, flicker: Double) {
-        // Deep ocean with warm pool near lamp
+        // Deep ocean base with radial depth
         let bgGrad = Gradient(stops: [
             .init(color: Color(hex: "0F1A2E"), location: 0),
             .init(color: Color(hex: "080E1A"), location: 1),
         ])
         context.fill(
             Path(CGRect(origin: .zero, size: CGSize(width: w, height: h))),
-            with: .radialGradient(bgGrad, center: lamp,
-                                  startRadius: 0, endRadius: max(w, h))
+            with: .radialGradient(bgGrad, center: lamp, startRadius: 0, endRadius: max(w, h))
         )
 
-        // Warm lamp pool — subtle gold tint near lamp
-        let warmSize = max(w, h) * 0.7
+        // Warm gold pool where the desk lamp hits the globe surface
         let warmGrad = Gradient(stops: [
             .init(color: Color(hex: "D4A843").opacity(0.05 * flicker), location: 0),
             .init(color: .clear, location: 0.7),
         ])
         context.fill(
             Path(CGRect(origin: .zero, size: CGSize(width: w, height: h))),
-            with: .radialGradient(warmGrad, center: lamp,
-                                  startRadius: 0, endRadius: warmSize)
+            with: .radialGradient(warmGrad, center: lamp, startRadius: 0, endRadius: max(w, h) * 0.7)
         )
     }
 
-    private func drawGraticule(context: GraphicsContext, w: Double, h: Double,
-                                centerLat: Double, centerLng: Double, bearing: Double) {
-        for lat in stride(from: -80.0, through: 80.0, by: 10.0) {
-            var line = Path()
-            var lineStarted = false
-            var prevVis = false
-            for lngSample in stride(from: -180.0, through: 180.0, by: 5.0) {
-                let proj = project(lat, lngSample, centerLat: centerLat, centerLng: centerLng,
-                                  bearing: bearing, w: w, h: h)
-                if !proj.visible { prevVis = false; lineStarted = false; continue }
-                let pt = CGPoint(x: proj.x, y: proj.y)
-                if !lineStarted || !prevVis { line.move(to: pt); lineStarted = true }
-                else { line.addLine(to: pt) }
-                prevVis = true
-            }
-            let opacity: Double = lat == 0 ? 0.08 : 0.025
-            context.stroke(line, with: .color(Color(hex: "D4A843").opacity(opacity)), lineWidth: 0.3)
-        }
-
-        for lngLine in stride(from: -180.0, through: 165.0, by: 15.0) {
-            var line = Path()
-            var lineStarted = false
-            var prevVis = false
-            for latSample in stride(from: -90.0, through: 90.0, by: 5.0) {
-                let proj = project(latSample, lngLine, centerLat: centerLat, centerLng: centerLng,
-                                  bearing: bearing, w: w, h: h)
-                if !proj.visible { prevVis = false; lineStarted = false; continue }
-                let pt = CGPoint(x: proj.x, y: proj.y)
-                if !lineStarted || !prevVis { line.move(to: pt); lineStarted = true }
-                else { line.addLine(to: pt) }
-                prevVis = true
-            }
-            let opacity: Double = lngLine == 0 ? 0.08 : 0.025
-            context.stroke(line, with: .color(Color(hex: "D4A843").opacity(opacity)), lineWidth: 0.3)
-        }
-    }
-
     private func drawLand(context: GraphicsContext, w: Double, h: Double,
-                          centerLat: Double, centerLng: Double, bearing: Double,
-                          lamp: CGPoint, flicker: Double) {
+                          centerLat: Double, centerLng: Double, bearing: Double) {
         for polygon in geoData.landPolygons {
             let path = buildProjectedPath(
                 points: polygon.points,
@@ -303,21 +249,22 @@ struct MapStripView: View {
 
     private func drawCoastlines(context: GraphicsContext, w: Double, h: Double,
                                  centerLat: Double, centerLng: Double, bearing: Double,
-                                 lamp: CGPoint, flicker: Double, time: Double) {
-        let shimmer = isScrolling ? 0.7 : (0.6 + 0.15 * sin(time * 1.2))
+                                 flicker: Double, time: Double) {
+        // Shimmer: coastlines pulse when Crown is stationary
+        let brightOpacity = isScrolling ? 0.7 : (0.6 + 0.15 * sin(time * 1.2))
         for line in geoData.coastlines {
             let path = buildProjectedPath(
                 points: line.points,
                 centerLat: centerLat, centerLng: centerLng, bearing: bearing,
                 w: w, h: h, close: false
             )
-            // Glow layer
+            // Wide dim glow — simulates light scatter
             context.stroke(path,
                 with: .color(Color(hex: "D4A843").opacity(0.12 * flicker)),
                 style: StrokeStyle(lineWidth: 3.0, lineCap: .round))
-            // Bright line
+            // Narrow bright line — the actual coastline
             context.stroke(path,
-                with: .color(Color(hex: "D4A843").opacity(shimmer * flicker)),
+                with: .color(Color(hex: "D4A843").opacity(brightOpacity * flicker)),
                 style: StrokeStyle(lineWidth: 0.8, lineCap: .round))
         }
     }
@@ -342,11 +289,9 @@ struct MapStripView: View {
             style: StrokeStyle(lineWidth: 0.5, dash: [4, 6]))
     }
 
-    // MARK: - Lamp Lighting (replaces old vignette)
-
     private func drawLampVignette(context: GraphicsContext, w: Double, h: Double,
                                    lamp: CGPoint, flicker: Double) {
-        // Directional shadow — darker on the side AWAY from the lamp
+        // Directional shadow — darker on the side away from the desk lamp
         let shadowGrad = Gradient(stops: [
             .init(color: .clear, location: 0.15),
             .init(color: .black.opacity(0.25), location: 0.5),
@@ -358,7 +303,7 @@ struct MapStripView: View {
                                   startRadius: 0, endRadius: max(w, h) * 0.75)
         )
 
-        // Fixed bezel shadow — always darkens the very edges
+        // Fixed bezel shadow — the watch bezel always casts a slight shadow
         let bezelGrad = Gradient(stops: [
             .init(color: .clear, location: 0.4),
             .init(color: .black.opacity(0.12), location: 1.0),
@@ -369,43 +314,5 @@ struct MapStripView: View {
             with: .radialGradient(bezelGrad, center: center,
                                   startRadius: 0, endRadius: max(w, h) * 0.6)
         )
-    }
-
-
-    private func drawCompass(context: GraphicsContext, w: Double, h: Double,
-                              centerLat: Double, centerLng: Double, bearing: Double) {
-        let compassFont = Font.system(size: 9, weight: .light, design: .serif)
-        let compassColor = Color(hex: "D4A843").opacity(0.2)
-        let offset = visibleRange * 0.8
-
-        let directions: [(String, Double, Double)] = [
-            ("N", centerLat + offset, centerLng),
-            ("S", centerLat - offset, centerLng),
-            ("E", centerLat, centerLng + offset / max(0.1, cos(centerLat * .pi / 180))),
-            ("W", centerLat, centerLng - offset / max(0.1, cos(centerLat * .pi / 180))),
-        ]
-
-        for (label, lat, lng) in directions {
-            let proj = project(lat, lng,
-                              centerLat: centerLat, centerLng: centerLng,
-                              bearing: bearing, w: w, h: h)
-            guard proj.visible else { continue }
-            let pt = CGPoint(x: proj.x, y: proj.y)
-            guard pt.x > 5 && pt.x < w - 5 && pt.y > 5 && pt.y < h - 5 else { continue }
-            let text = Text(label).font(compassFont).foregroundColor(compassColor)
-            context.draw(context.resolve(text), at: pt, anchor: .center)
-        }
-    }
-
-    // MARK: - Labels
-
-    private var latLabel: String {
-        let lat = currentPosition.lat
-        return String(format: "%.1f°%@", abs(lat), lat >= 0 ? "N" : "S")
-    }
-
-    private var lngLabel: String {
-        let lng = currentPosition.lng
-        return String(format: "%.1f°%@", abs(lng), lng >= 0 ? "E" : "W")
     }
 }
