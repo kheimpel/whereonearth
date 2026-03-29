@@ -30,6 +30,7 @@
 		HH00000100000000000000002A /* BrassArmatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH00000100000000000000002B /* BrassArmatureView.swift */; };
 		II00000100000000000000001A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = II00000100000000000000001B /* Theme.swift */; };
 		JJ00000100000000000000001A /* continents.json in Resources */ = {isa = PBXBuildFile; fileRef = JJ00000100000000000000001B /* continents.json */; };
+		KK00000100000000000000001A /* TimeHider.swift in Sources */ = {isa = PBXBuildFile; fileRef = KK00000100000000000000001B /* TimeHider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		HH00000100000000000000002B /* BrassArmatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrassArmatureView.swift; sourceTree = "<group>"; };
 		II00000100000000000000001B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		JJ00000100000000000000001B /* continents.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = continents.json; sourceTree = "<group>"; };
+		KK00000100000000000000001B /* TimeHider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				CC00000100000000000000003B /* ResultView.swift */,
 				CC00000100000000000000004B /* GameView.swift */,
 				HH00000100000000000000002B /* BrassArmatureView.swift */,
+				KK00000100000000000000001B /* TimeHider.swift */,
 			);
 			name = Views;
 			path = Views;
@@ -305,6 +308,7 @@
 				HH00000100000000000000001A /* WristMotion.swift in Sources */,
 				HH00000100000000000000002A /* BrassArmatureView.swift in Sources */,
 				II00000100000000000000001A /* Theme.swift in Sources */,
+				KK00000100000000000000001A /* TimeHider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

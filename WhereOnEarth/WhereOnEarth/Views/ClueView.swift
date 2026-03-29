@@ -33,5 +33,6 @@ struct ClueView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.ocean)
         .toolbar(.hidden, for: .navigationBar)
+        .persistentSystemOverlays(.hidden)
     }
 }

@@ -14,9 +14,9 @@ struct BrassArmatureView: View {
     /// Width of the brass wire in points
     private let wireWidth: CGFloat = 1.0
     /// Diameter of the center indicator dot
-    private let indicatorSize: CGFloat = 10
+    private let indicatorSize: CGFloat = 12
     /// Diameter of the breathing outer glow
-    private let glowSize: CGFloat = 20
+    private let glowSize: CGFloat = 26
     /// Length of horizontal precision tick marks
     private let tickLength: CGFloat = 8
     /// Height of horizontal tick marks
@@ -48,7 +48,7 @@ struct BrassArmatureView: View {
             // Lamp flicker: ±2% intensity at 0.4Hz — barely visible, adds warmth
             let flicker = 1.0 + sin(time * 2.5) * 0.02
             // Breathing glow: 15±5% opacity at 2Hz
-            let glowBreath = 0.15 + 0.05 * sin(time * 2.0)
+            let glowBreath = 0.2 + 0.08 * sin(time * 2.0)
 
             GeometryReader { geo in
                 let w = geo.size.width
@@ -105,7 +105,7 @@ struct BrassArmatureView: View {
                     // Shifts toward lamp position
                     Circle()
                         .fill(specularGold.opacity(specularIntensity(flicker: flicker)))
-                        .frame(width: 4, height: 4)
+                        .frame(width: 6, height: 6)
                         .position(
                             x: cx + (lampX - 0.5) * 3,
                             y: cy + (lampY - 0.5) * 3
@@ -158,6 +158,6 @@ struct BrassArmatureView: View {
     /// Brighter when lamp is closer to screen center (more direct illumination).
     private func specularIntensity(flicker: Double) -> Double {
         let lampDist = hypot(lampX - 0.5, lampY - 0.5)
-        return max(0, (1.0 - lampDist * 2.0) * 0.7 * flicker)
+        return max(0, (1.0 - lampDist * 2.0) * 0.9 * flicker)
     }
 }

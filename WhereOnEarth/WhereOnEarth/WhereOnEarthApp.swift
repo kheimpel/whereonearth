@@ -8,6 +8,7 @@ struct WhereOnEarthApp: App {
     var body: some Scene {
         WindowGroup {
             MenuView(geoData: geoData, wristMotion: wristMotion)
+                .background(TimeHider())
         }
     }
 }

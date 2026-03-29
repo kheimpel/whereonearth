@@ -68,6 +68,7 @@ struct ResultView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.ocean)
         .toolbar(.hidden, for: .navigationBar)
+        .persistentSystemOverlays(.hidden)
     }
 
     private var formattedPoints: String {

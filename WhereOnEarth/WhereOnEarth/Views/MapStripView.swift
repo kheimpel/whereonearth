@@ -54,30 +54,48 @@ struct MapStripView: View {
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
 
-            // Bottom UI — continent, button, coordinates
-            VStack(spacing: Theme.spacingXS) {
+            // Bottom floating pill — compact, hugs bottom edge
+            VStack {
                 Spacer()
-                if let continent = continentLabel {
-                    Text(continent)
-                        .font(Theme.caption)
-                        .fontWeight(.medium)
-                        .tracking(2)
-                        .foregroundStyle(Theme.gold.opacity(0.3))
-                        .transition(.opacity)
-                }
-                if !isScrolling {
+                HStack(spacing: 6) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(continentLabel ?? " ")
+                            .font(Theme.caption)
+                            .tracking(1.5)
+                            .foregroundStyle(Theme.gold.opacity(continentLabel != nil ? 0.4 : 0))
+                        Text(coordinateLabel)
+                            .font(Theme.caption)
+                            .foregroundStyle(Theme.parchment.opacity(0.65))
+                    }
+
+                    Spacer()
+
+                    // Lock In — always visible, small gold circle
                     Button(action: { onSubmit((currentPosition.lat, currentPosition.lng)) }) {
-                        Text("LOCK IN").ghostButton()
+                        Circle()
+                            .fill(Theme.gold.opacity(0.5))
+                            .frame(width: 20, height: 20)
+                            .overlay(
+                                Circle()
+                                    .strokeBorder(Theme.ocean, lineWidth: 1)
+                                    .frame(width: 10, height: 10)
+                            )
                     }
                     .buttonStyle(.plain)
-                    .transition(.opacity)
                 }
-                Text(coordinateLabel)
-                    .font(Theme.caption)
-                    .foregroundStyle(Theme.parchment.opacity(0.5))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(Theme.ocean.opacity(0.8))
+                        .overlay(
+                            Capsule()
+                                .strokeBorder(Theme.gold.opacity(0.08), lineWidth: 0.5)
+                        )
+                )
+                .padding(.horizontal, 6)
+                .padding(.bottom, 2)
             }
-            .padding(.bottom, Theme.spacingSM)
-            .animation(.easeInOut(duration: 0.3), value: isScrolling)
         }
         .onChange(of: scrollT) {
             isScrolling = true
@@ -99,6 +117,7 @@ struct MapStripView: View {
         }
         .onDisappear { wristMotion.stop() }
         .toolbar(.hidden, for: .navigationBar)
+        .persistentSystemOverlays(.hidden)
     }
 
     // MARK: - Great Circle Navigation
@@ -218,7 +237,8 @@ struct MapStripView: View {
 
         // Warm gold pool where the desk lamp hits the globe surface
         let warmGrad = Gradient(stops: [
-            .init(color: Color(hex: "D4A843").opacity(0.05 * flicker), location: 0),
+            .init(color: Color(hex: "D4A843").opacity(0.1 * flicker), location: 0),
+            .init(color: Color(hex: "D4A843").opacity(0.03 * flicker), location: 0.4),
             .init(color: .clear, location: 0.7),
         ])
         context.fill(
@@ -235,7 +255,7 @@ struct MapStripView: View {
                 centerLat: centerLat, centerLng: centerLng, bearing: bearing,
                 w: w, h: h, close: true
             )
-            context.fill(path, with: .color(Color(hex: "152240").opacity(0.9)))
+            context.fill(path, with: .color(Color(hex: "1A2D4A")))
         }
     }
 
@@ -250,14 +270,19 @@ struct MapStripView: View {
                 centerLat: centerLat, centerLng: centerLng, bearing: bearing,
                 w: w, h: h, close: false
             )
+            // Variable weight: major landmasses thicker, small islands thinner
+            let pointCount = line.points.count
+            let brightWidth: Double = pointCount > 100 ? 1.2 : (pointCount > 30 ? 0.8 : 0.5)
+            let glowWidth: Double = pointCount > 100 ? 4.0 : (pointCount > 30 ? 3.0 : 2.0)
+
             // Wide dim glow — simulates light scatter
             context.stroke(path,
-                with: .color(Color(hex: "D4A843").opacity(0.12 * flicker)),
-                style: StrokeStyle(lineWidth: 3.0, lineCap: .round))
+                with: .color(Color(hex: "D4A843").opacity(0.15 * flicker)),
+                style: StrokeStyle(lineWidth: glowWidth, lineCap: .round))
             // Narrow bright line — the actual coastline
             context.stroke(path,
                 with: .color(Color(hex: "D4A843").opacity(brightOpacity * flicker)),
-                style: StrokeStyle(lineWidth: 0.8, lineCap: .round))
+                style: StrokeStyle(lineWidth: brightWidth, lineCap: .round))
         }
     }
 
@@ -285,26 +310,28 @@ struct MapStripView: View {
                                    lamp: CGPoint, flicker: Double) {
         // Directional shadow — darker on the side away from the desk lamp
         let shadowGrad = Gradient(stops: [
-            .init(color: .clear, location: 0.15),
-            .init(color: .black.opacity(0.25), location: 0.5),
-            .init(color: .black.opacity(0.55 * flicker), location: 1.0),
+            .init(color: .clear, location: 0.1),
+            .init(color: .black.opacity(0.3), location: 0.4),
+            .init(color: .black.opacity(0.6 * flicker), location: 0.7),
+            .init(color: .black.opacity(0.75 * flicker), location: 1.0),
         ])
         context.fill(
             Path(CGRect(origin: .zero, size: CGSize(width: w, height: h))),
             with: .radialGradient(shadowGrad, center: lamp,
-                                  startRadius: 0, endRadius: max(w, h) * 0.75)
+                                  startRadius: 0, endRadius: max(w, h) * 0.7)
         )
 
-        // Fixed bezel shadow — the watch bezel always casts a slight shadow
+        // Fixed bezel shadow — globe curvature, always darkens edges
         let bezelGrad = Gradient(stops: [
-            .init(color: .clear, location: 0.4),
-            .init(color: .black.opacity(0.12), location: 1.0),
+            .init(color: .clear, location: 0.3),
+            .init(color: .black.opacity(0.15), location: 0.6),
+            .init(color: .black.opacity(0.3), location: 1.0),
         ])
         let center = CGPoint(x: w / 2, y: h / 2)
         context.fill(
             Path(CGRect(origin: .zero, size: CGSize(width: w, height: h))),
             with: .radialGradient(bezelGrad, center: center,
-                                  startRadius: 0, endRadius: max(w, h) * 0.6)
+                                  startRadius: 0, endRadius: max(w, h) * 0.55)
         )
     }
 }
