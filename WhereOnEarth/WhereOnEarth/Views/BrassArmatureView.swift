@@ -1,16 +1,53 @@
 import SwiftUI
 
 /// The brass meridian wire hovering above the globe surface.
-/// Uses SwiftUI views with real `.shadow()` for depth separation,
-/// and `.drawingGroup()` for Metal-backed compositing.
+/// A single vertical gold wire with a center indicator dot.
+/// Real `.shadow()` creates depth separation from the map below.
+/// `.drawingGroup()` enables Metal-backed compositing.
+/// All lighting derives from lampX/lampY — the virtual desk lamp position.
 struct BrassArmatureView: View {
     let lampX: Double
     let lampY: Double
 
+    // -- Physical constants --
+
+    /// Width of the brass wire in points
+    private let wireWidth: CGFloat = 1.0
+    /// Diameter of the center indicator dot
+    private let indicatorSize: CGFloat = 10
+    /// Diameter of the breathing outer glow
+    private let glowSize: CGFloat = 20
+    /// Length of horizontal precision tick marks
+    private let tickLength: CGFloat = 8
+    /// Height of horizontal tick marks
+    private let tickHeight: CGFloat = 0.5
+    /// Shadow parallax factor — how much shadow offsets per pixel of lamp distance
+    private let shadowParallaxFactor: Double = 0.08
+    /// Indicator gets 1.5× more shadow offset to emphasize depth
+    private let indicatorShadowFactor: Double = 0.12
+    /// Width of the specular band on the wire (fraction of total height)
+    private let specularBandWidth: Double = 0.08
+
+    // -- Gold color palette --
+    // Metals have COLORED specular highlights. Gold specular = gold, NOT white.
+
+    /// Shadow zones and wire body
+    private let darkGold = Color(hex: "8C5914")
+    /// Primary visible tone
+    private let midGold = Color(hex: "D9A621")
+    /// Near-specular zones
+    private let brightGold = Color(hex: "FFD959")
+    /// Core of specular hot spot — gold-tinted, never pure white
+    private let specularGold = Color(hex: "FFF2B3")
+    /// Ambient glow around indicator
+    private let glowGold = Color(hex: "D4A843")
+
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
             let time = timeline.date.timeIntervalSinceReferenceDate
+            // Lamp flicker: ±2% intensity at 0.4Hz — barely visible, adds warmth
             let flicker = 1.0 + sin(time * 2.5) * 0.02
+            // Breathing glow: 15±5% opacity at 2Hz
             let glowBreath = 0.15 + 0.05 * sin(time * 2.0)
 
             GeometryReader { geo in
@@ -19,120 +56,108 @@ struct BrassArmatureView: View {
                 let cx = w / 2
                 let cy = h / 2
 
-                // Shadow offset from lamp (parallax — shadow falls away from light)
-                let shadowDx = (cx - lampX * w) * 0.08
-                let shadowDy = (cy - lampY * h) * 0.08
+                // Shadow offset: parallax from lamp — shadow falls AWAY from light
+                let shadowDx = (cx - lampX * w) * shadowParallaxFactor
+                let shadowDy = (cy - lampY * h) * shadowParallaxFactor
+                let indShadowDx = (cx - lampX * w) * indicatorShadowFactor
+                let indShadowDy = (cy - lampY * h) * indicatorShadowFactor
 
                 ZStack {
                     // -- VERTICAL BRASS WIRE --
-
-                    // The wire itself — ultra thin gold line
+                    // LinearGradient with specular band that slides to lampY
                     Rectangle()
-                        .fill(
-                            LinearGradient(
-                                stops: wireGradientStops(lampY: lampY, flicker: flicker),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .frame(width: 1.0, height: h)
+                        .fill(LinearGradient(
+                            stops: wireGradientStops(flicker: flicker),
+                            startPoint: .top, endPoint: .bottom
+                        ))
+                        .frame(width: wireWidth, height: h)
                         .position(x: cx, y: cy)
-                        // Real shadow — blurred, offset, creates depth
-                        .shadow(
-                            color: .black.opacity(0.4),
-                            radius: 3,
-                            x: shadowDx,
-                            y: shadowDy
-                        )
+                        .shadow(color: .black.opacity(0.4), radius: 3,
+                                x: shadowDx, y: shadowDy)
 
-                    // -- CENTER INDICATOR (the brass pointer) --
-
-                    // Outer glow
+                    // -- BREATHING OUTER GLOW --
+                    // Warm ambient light around the indicator
                     Circle()
-                        .fill(Color(hex: "D4A843").opacity(glowBreath * flicker))
-                        .frame(width: 20, height: 20)
+                        .fill(glowGold.opacity(glowBreath * flicker))
+                        .frame(width: glowSize, height: glowSize)
                         .position(x: cx, y: cy)
 
-                    // Gold body
+                    // -- GOLD INDICATOR BODY --
+                    // RadialGradient with center offset toward lamp
+                    // Brighter on the lamp side, darker on the shadow side
                     Circle()
-                        .fill(
-                            RadialGradient(
-                                colors: [
-                                    Color(hex: "FFD959").opacity(0.9 * flicker),  // bright center
-                                    Color(hex: "D9A621").opacity(0.8 * flicker),  // mid gold
-                                    Color(hex: "8C5914").opacity(0.7 * flicker),  // dark edge
-                                ],
-                                center: UnitPoint(
-                                    x: lampX,
-                                    y: lampY
-                                ),
-                                startRadius: 0,
-                                endRadius: 8
-                            )
-                        )
-                        .frame(width: 10, height: 10)
+                        .fill(RadialGradient(
+                            colors: [
+                                brightGold.opacity(0.9 * flicker),
+                                midGold.opacity(0.8 * flicker),
+                                darkGold.opacity(0.7 * flicker),
+                            ],
+                            center: UnitPoint(x: lampX, y: lampY),
+                            startRadius: 0, endRadius: 8
+                        ))
+                        .frame(width: indicatorSize, height: indicatorSize)
                         .position(x: cx, y: cy)
-                        .shadow(
-                            color: .black.opacity(0.5),
-                            radius: 4,
-                            x: shadowDx * 1.5,
-                            y: shadowDy * 1.5
-                        )
+                        .shadow(color: .black.opacity(0.5), radius: 4,
+                                x: indShadowDx, y: indShadowDy)
 
-                    // Specular hot spot on indicator — gold-tinted, NOT white
+                    // -- SPECULAR HOT SPOT --
+                    // Gold-tinted (NOT white) — this is what makes it read as metal
+                    // Shifts toward lamp position
                     Circle()
-                        .fill(Color(hex: "FFF2B3").opacity(specularIntensity(cx: cx, cy: cy, flicker: flicker)))
+                        .fill(specularGold.opacity(specularIntensity(flicker: flicker)))
                         .frame(width: 4, height: 4)
                         .position(
-                            x: cx + (lampX - 0.5) * 3,  // specular shifts toward lamp
+                            x: cx + (lampX - 0.5) * 3,
                             y: cy + (lampY - 0.5) * 3
                         )
 
-                    // -- HORIZONTAL TICK MARKS (subtle, for precision) --
+                    // -- HORIZONTAL PRECISION TICKS --
+                    // Left tick
                     Rectangle()
-                        .fill(Color(hex: "8C5914").opacity(0.3 * flicker))
-                        .frame(width: 8, height: 0.5)
-                        .position(x: cx - 9, y: cy)
-                        .shadow(color: .black.opacity(0.2), radius: 2, x: shadowDx, y: shadowDy)
+                        .fill(darkGold.opacity(0.3 * flicker))
+                        .frame(width: tickLength, height: tickHeight)
+                        .position(x: cx - indicatorSize / 2 - tickLength / 2 - 1, y: cy)
+                        .shadow(color: .black.opacity(0.2), radius: 2,
+                                x: shadowDx, y: shadowDy)
 
+                    // Right tick
                     Rectangle()
-                        .fill(Color(hex: "8C5914").opacity(0.3 * flicker))
-                        .frame(width: 8, height: 0.5)
-                        .position(x: cx + 9, y: cy)
-                        .shadow(color: .black.opacity(0.2), radius: 2, x: shadowDx, y: shadowDy)
+                        .fill(darkGold.opacity(0.3 * flicker))
+                        .frame(width: tickLength, height: tickHeight)
+                        .position(x: cx + indicatorSize / 2 + tickLength / 2 + 1, y: cy)
+                        .shadow(color: .black.opacity(0.2), radius: 2,
+                                x: shadowDx, y: shadowDy)
                 }
-                .drawingGroup() // Metal-backed compositing for all the layers
+                .drawingGroup() // Metal-backed compositing for all layers
             }
         }
     }
 
-    /// Gradient stops for the vertical wire — specular slides with lamp Y
-    private func wireGradientStops(lampY: Double, flicker: Double) -> [Gradient.Stop] {
-        let darkGold = Color(hex: "8C5914").opacity(0.5 * flicker)
-        let midGold = Color(hex: "D9A621").opacity(0.6 * flicker)
-        let brightGold = Color(hex: "FFD959").opacity(0.7 * flicker)
-
-        // Specular band centered at lampY
-        let specCenter = lampY
-        let specWidth = 0.08
+    /// Gradient stops for the vertical wire.
+    /// Dark gold body with a bright specular band centered at lampY.
+    /// When wrist tilts, lampY changes and the specular slides along the wire.
+    private func wireGradientStops(flicker: Double) -> [Gradient.Stop] {
+        let dark = darkGold.opacity(0.5 * flicker)
+        let mid = midGold.opacity(0.6 * flicker)
+        let bright = brightGold.opacity(0.7 * flicker)
+        let bandCenter = lampY
+        let halfBand = specularBandWidth
 
         return [
-            .init(color: darkGold, location: 0),
-            .init(color: darkGold, location: max(0, specCenter - specWidth * 2)),
-            .init(color: midGold, location: max(0, specCenter - specWidth)),
-            .init(color: brightGold, location: specCenter),
-            .init(color: midGold, location: min(1, specCenter + specWidth)),
-            .init(color: darkGold, location: min(1, specCenter + specWidth * 2)),
-            .init(color: darkGold, location: 1),
+            .init(color: dark, location: 0),
+            .init(color: dark, location: max(0, bandCenter - halfBand * 2)),
+            .init(color: mid, location: max(0, bandCenter - halfBand)),
+            .init(color: bright, location: bandCenter),
+            .init(color: mid, location: min(1, bandCenter + halfBand)),
+            .init(color: dark, location: min(1, bandCenter + halfBand * 2)),
+            .init(color: dark, location: 1),
         ]
     }
 
-    /// Specular intensity on the center indicator
-    private func specularIntensity(cx: Double, cy: Double, flicker: Double) -> Double {
-        let lampPx = lampX * cx * 2
-        let lampPy = lampY * cy * 2
-        let dist = hypot(cx - lampPx, cy - lampPy)
-        let maxDist = hypot(cx, cy)
-        return max(0, (1.0 - dist / maxDist) * 0.7 * flicker)
+    /// Specular intensity on the center indicator.
+    /// Brighter when lamp is closer to screen center (more direct illumination).
+    private func specularIntensity(flicker: Double) -> Double {
+        let lampDist = hypot(lampX - 0.5, lampY - 0.5)
+        return max(0, (1.0 - lampDist * 2.0) * 0.7 * flicker)
     }
 }
