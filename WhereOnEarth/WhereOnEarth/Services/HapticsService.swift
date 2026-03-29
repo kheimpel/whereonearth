@@ -1,15 +1,15 @@
 import WatchKit
 
 enum HapticsService {
-    static func play(for accuracy: ScoreResult.Accuracy) {
-        switch accuracy {
-        case .country:
+    static func play(for result: ScoreResult) {
+        switch result.points {
+        case 4500...5000:
             WKInterfaceDevice.current().play(.success)
-        case .region:
+        case 3500..<4500:
             WKInterfaceDevice.current().play(.directionUp)
-        case .continent:
+        case 2000..<3500:
             WKInterfaceDevice.current().play(.click)
-        case .wrong:
+        default:
             WKInterfaceDevice.current().play(.failure)
         }
     }

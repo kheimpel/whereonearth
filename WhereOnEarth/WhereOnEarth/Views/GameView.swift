@@ -25,7 +25,7 @@ struct GameView: View {
                     MapStripView(clue: clue, onSubmit: { (lat, lng) in
                         session.submitGuess(lat: lat, lng: lng)
                         if let lastResult = session.results.last {
-                            HapticsService.play(for: lastResult.accuracy)
+                            HapticsService.play(for: lastResult)
                         }
                     }, geoData: geoData, wristMotion: wristMotion)
                 }
@@ -38,11 +38,11 @@ struct GameView: View {
             case .finished:
                 VStack(spacing: 4) {
                     Spacer()
-                    Text("\(session.totalScore)")
-                        .font(Theme.font(size: 44, weight: .light))
+                    Text(formattedScore(session.totalScore))
+                        .font(Theme.font(size: 40, weight: .light))
                         .foregroundStyle(Theme.gold)
                         .minimumScaleFactor(0.6)
-                    Text("out of \(session.maxPossibleScore)")
+                    Text("out of \(formattedScore(session.maxPossibleScore))")
                         .font(Theme.font(size: 11))
                         .foregroundStyle(Theme.parchment.opacity(0.4))
                         .minimumScaleFactor(0.7)
@@ -64,5 +64,12 @@ struct GameView: View {
             }
         }
         .navigationBarBackButtonHidden(session.phase != .finished)
+    }
+
+    private func formattedScore(_ value: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
 }

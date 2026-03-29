@@ -85,8 +85,10 @@ struct MapStripView: View {
             wristMotion.start()
             // Start at a random offset so player must scroll to find the answer (at t=0)
             if !initialized {
-                let offsets: [Double] = [-120, -90, -60, 60, 90, 120]
-                scrollT = offsets.randomElement() ?? 90
+                // Random offset — at least 20° away so the answer isn't immediately visible
+                var offset = Double.random(in: -180...180)
+                if abs(offset) < 20 { offset = offset < 0 ? -20 : 20 }
+                scrollT = offset
                 initialized = true
             }
         }

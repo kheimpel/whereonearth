@@ -1,7 +1,7 @@
 import Testing
 @testable import WhereOnEarth
 
-@Test func scoreRightCountry() {
+@Test func perfectScore() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
@@ -9,12 +9,12 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: 140.0, for: clue)
-    #expect(result.points == 3)
-    #expect(result.accuracy == .country)
+    let result = GameEngine.score(guessLat: 35.7, guessLng: 139.7, for: clue)
+    #expect(result.points == 5000)
+    #expect(result.tier == "SPOT ON")
 }
 
-@Test func scoreRightRegion() {
+@Test func closeGuess() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
@@ -22,12 +22,13 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: 135.0, for: clue)
-    #expect(result.points == 2)
-    #expect(result.accuracy == .region)
+    let result = GameEngine.score(guessLat: 35.7, guessLng: 135.0, for: clue)
+    #expect(result.points > 3500)
+    #expect(result.points < 4500)
+    #expect(result.tier == "EXCELLENT")
 }
 
-@Test func scoreRightContinent() {
+@Test func continentLevel() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
@@ -35,12 +36,13 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: 120.0, for: clue)
-    #expect(result.points == 1)
-    #expect(result.accuracy == .continent)
+    let result = GameEngine.score(guessLat: 35.7, guessLng: 120.0, for: clue)
+    #expect(result.points > 1500)
+    #expect(result.points < 3000)
+    #expect(result.tier == "CLOSE")
 }
 
-@Test func scoreWrongContinent() {
+@Test func veryFarOff() {
     let clue = Clue(
         id: "test", type: .cultural, text: "Test",
         answerLongitude: 139.7, answerLatitude: 35.7, answerCountry: "Japan",
@@ -48,9 +50,9 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: -80.0, for: clue)
-    #expect(result.points == 0)
-    #expect(result.accuracy == .wrong)
+    let result = GameEngine.score(guessLat: -35.0, guessLng: -40.0, for: clue)
+    #expect(result.points < 100)
+    #expect(result.tier == "WAY OFF")
 }
 
 @Test func scoringWrapsAroundAntimeridian() {
@@ -61,6 +63,8 @@ import Testing
         difficulty: 1,
         scrollBearing: 90, scrollCenterLat: 35, scrollCenterLng: 100
     )
-    let result = GameEngine.score(guessLongitude: -175.0, for: clue)
-    #expect(result.points == 1)
+    let result = GameEngine.score(guessLat: -17.7, guessLng: -175.0, for: clue)
+    // 15° of longitude at lat -17.7 ≈ 1589 km → ~2260 points
+    #expect(result.points > 2000)
+    #expect(result.points < 2500)
 }

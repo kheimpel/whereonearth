@@ -24,7 +24,7 @@ final class GameSession {
     }
 
     var maxPossibleScore: Int {
-        clues.count * 3
+        clues.count * GameEngine.maxPoints
     }
 
     var isFinished: Bool {

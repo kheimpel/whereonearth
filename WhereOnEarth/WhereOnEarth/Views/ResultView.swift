@@ -9,10 +9,10 @@ struct ResultView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            // Score — the hero element
+            // Score — the hero element (out of 5000)
             PhaseAnimator([false, true], trigger: result.points) { phase in
-                Text("+\(result.points)")
-                    .font(Theme.font(size: 44, weight: .light))
+                Text(formattedPoints)
+                    .font(Theme.font(size: 40, weight: .light))
                     .foregroundStyle(Theme.gold)
                     .scaleEffect(phase ? 1.0 : 0.5)
                     .opacity(phase ? 1.0 : 0.0)
@@ -20,23 +20,23 @@ struct ResultView: View {
                 .spring(duration: 0.6, bounce: 0.3)
             }
 
-            // Accuracy tier
-            Text(accuracyLabel)
+            // Tier label
+            Text(result.tier)
                 .font(Theme.font(size: 10, weight: .medium))
                 .tracking(3)
-                .foregroundStyle(accuracyColor)
+                .foregroundStyle(tierColor)
                 .minimumScaleFactor(0.7)
                 .padding(.top, 2)
 
             Spacer()
-                .frame(height: 16)
+                .frame(height: 14)
 
             Rectangle()
                 .fill(Theme.gold.opacity(0.15))
                 .frame(width: 40, height: 0.5)
 
             Spacer()
-                .frame(height: 12)
+                .frame(height: 10)
 
             // The answer
             Text("The answer was")
@@ -72,36 +72,32 @@ struct ResultView: View {
         .toolbar(.hidden, for: .navigationBar)
     }
 
-    private var accuracyLabel: String {
-        switch result.accuracy {
-        case .country: return "RIGHT COUNTRY"
-        case .region: return "RIGHT REGION"
-        case .continent: return "RIGHT CONTINENT"
-        case .wrong: return "WRONG CONTINENT"
-        }
+    private var formattedPoints: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: result.points)) ?? "\(result.points)"
     }
 
-    private var accuracyColor: Color {
-        switch result.accuracy {
-        case .country: return Theme.gold
-        case .region: return Theme.gold.opacity(0.7)
-        case .continent: return Theme.gold.opacity(0.5)
-        case .wrong: return Theme.parchment.opacity(0.3)
+    private var tierColor: Color {
+        switch result.points {
+        case 4500...5000: return Theme.gold
+        case 3500..<4500: return Theme.gold.opacity(0.8)
+        case 2000..<3500: return Theme.gold.opacity(0.6)
+        case 500..<2000: return Theme.parchment.opacity(0.4)
+        default: return Theme.parchment.opacity(0.25)
         }
     }
 
     private var distanceKmLabel: String {
         let km = result.distanceKm
-        if km < 1 {
-            return "spot on"
-        } else if km < 10 {
-            return String(format: "%.0f km off", km)
-        } else {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 0
-            let formatted = formatter.string(from: NSNumber(value: km)) ?? "\(Int(km))"
-            return "\(formatted) km off"
-        }
+        if km < 0.025 { return "spot on" }
+        if km < 1 { return String(format: "%.0f m off", km * 1000) }
+        if km < 10 { return String(format: "%.1f km off", km) }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        let formatted = formatter.string(from: NSNumber(value: km)) ?? "\(Int(km))"
+        return "\(formatted) km off"
     }
 }
